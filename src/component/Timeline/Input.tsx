@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
-import { BiPlus, BiUpArrowAlt } from 'react-icons/bi';
+import { BiPlus, BiUpArrowAlt, BiCamera } from 'react-icons/bi';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
@@ -18,7 +18,7 @@ const circleToBox = keyframes`
     to {
         border-radius: 3%;
         width: calc(100% - 2rem);
-        height: 4rem;
+        height: 5rem;
         background: ${palette[1]};
     }
 `;
@@ -35,7 +35,7 @@ const Wrapper = styled.div<WrapperProps>`
     border-radius: 50%;
     
     ${(props) => props.active && css`
-        animation: ${circleToBox} 0.5s 0s linear alternate forwards;
+        animation: ${circleToBox} 0.3s 0s linear alternate forwards;
     `}
 
 
@@ -58,7 +58,8 @@ const Container = styled.div`
     & > div {
         display: flex;
         .textInput {
-            width: calc(100% - 3rem);
+            width: calc(100% - 5rem);
+            height: 3.25rem;
             margin: 0.75rem;
             margin-right: 0;
             border: none;
@@ -66,6 +67,7 @@ const Container = styled.div`
             font-size: 1.25rem;
         }
         .upBtn {
+            border: 3px solid black;
             font-size: 2rem;
             margin: 0.75rem;
             color: white;
@@ -77,35 +79,59 @@ const Container = styled.div`
 
 const Input = () => {
     const [isActive,setActive] = useState<boolean>(false);
-    const [textInputed,setTextInputed] = useState<boolean>(false);
-    const [textAreaHeight, setTextAreaHeight] = useState<number>(64);
+    const [typedText, setText] = useState<string>('');
     const textArea = useRef<HTMLTextAreaElement>(null);
-    const onClick = () => {
+    const fileuploader = useRef<HTMLInputElement>(null);
+
+    const activeToggle = () => {
         setActive(!isActive);
-    }
-    const onTyped = (e:any) => {
-        console.log(e.target.value);
-        console.log(textArea.current?.clientHeight, textArea.current?.scrollHeight);
-        setTextInputed(true);
-        if (textArea.current) {
-            setTextAreaHeight(+(textArea.current?.scrollHeight)+24);
+        setText('');
+    };
+    useEffect(() => {
+        isActive && textArea.current?.focus();
+    }, [isActive]);
+
+    const onTyped = useCallback((e:any) => {
+        setText(e.target.value);
+    },[]);
+
+    const onUploadFile = () => {
+        fileuploader.current?.click();
+    };
+
+    useEffect(() => {
+        function elemCheck(e:any) {
+            // console.log(e.target.tagName);
+            if (isActive && e.target.id !== 'textInput' ) {
+                if (e.target.tagName !== 'path') {
+                    activeToggle();
+                }
+            }
         }
-    }
-    console.log('rendered',textAreaHeight);
+        window.addEventListener('click', elemCheck);
+        return () => {
+            window.removeEventListener('click', elemCheck);
+        }
+    }, [isActive])
+
     return (
-        <Wrapper active={isActive} style={{ height: `${textAreaHeight}px`}}>
-            <Container>
+        <Wrapper active={isActive}>
+            <Container id="textInput">
                 {isActive ? 
-                    <div>
+                    <div className="textInput" id="textInput">
                         <textarea 
                             className="textInput" 
+                            id="textInput"
                             ref={textArea} 
-                            onKeyDown={onTyped} 
+                            value={typedText}
+                            onChange={onTyped} 
                             placeholder="Input your moment"
                         />
-                        <BiUpArrowAlt className="upBtn"/>
+                        <BiCamera className="upBtn" id="textInput" style={{ marginRight: 0 }} onClick={onUploadFile}/>
+                        <input type="file" id="textInput" ref={fileuploader} hidden />
+                        <BiUpArrowAlt className="upBtn" id="textInput" onClick={() => console.log('submit')}/>
                     </div>:
-                    <BiPlus className="fab" onClick={onClick} />
+                    <BiPlus className="fab" onClick={activeToggle} />
                 }   
             </Container>
         </Wrapper>
