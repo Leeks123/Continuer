@@ -1,10 +1,13 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import counterReducer from '../reducers/counterSlice';
+// import counterReducer from '../reducers/counterSlice';
+import layoutReducer from '../reducers/layoutSlice';
+import cardListSlice from '../reducers/cardListSlice';
 
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    layout: layoutReducer,
+    content: cardListSlice,
   },
   middleware: getDefaultMiddleware(),
   devTools: true,

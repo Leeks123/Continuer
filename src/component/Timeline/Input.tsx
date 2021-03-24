@@ -2,8 +2,14 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { BiPlus, BiUpArrowAlt, BiCamera } from 'react-icons/bi';
 
+import { useAppDispatch } from '../../hooks/redux';
+import { addCard } from '../../redux/reducers/cardListSlice';
+
+import { format } from 'date-fns';
+
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
+import useWindowWidth from '../../hooks/layout';
 
 type WrapperProps = {
     active: boolean,
@@ -31,7 +37,7 @@ const Wrapper = styled.div<WrapperProps>`
     right: 1rem;
 
     background: ${palette[6]};
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
     border-radius: 50%;
     
     ${(props) => props.active && css`
@@ -78,10 +84,12 @@ const Container = styled.div`
 `;
 
 const Input = () => {
+    const dispatch = useAppDispatch();
     const [isActive,setActive] = useState<boolean>(false);
     const [typedText, setText] = useState<string>('');
     const textArea = useRef<HTMLTextAreaElement>(null);
     const fileuploader = useRef<HTMLInputElement>(null);
+    const windowWidth = useWindowWidth();
 
     const activeToggle = () => {
         setActive(!isActive);
@@ -93,11 +101,22 @@ const Input = () => {
 
     const onTyped = useCallback((e:any) => {
         setText(e.target.value);
+        console.log(e.target.value);
     },[]);
 
     const onUploadFile = () => {
         fileuploader.current?.click();
     };
+
+    const onSubmit = () => {
+        const date = new Date();
+        console.log(format(date,'Y LLLL d HH mm ss'));
+        dispatch(addCard({
+            text: typedText,
+            date: date.toString()
+        }))
+        setText('');
+    }
 
     useEffect(() => {
         function elemCheck(e:any) {
@@ -117,7 +136,7 @@ const Input = () => {
     return (
         <Wrapper active={isActive}>
             <Container id="textInput">
-                {isActive ? 
+                {isActive && windowWidth < mediaQuery.tablet ? 
                     <div className="textInput" id="textInput">
                         <textarea 
                             className="textInput" 
@@ -129,7 +148,7 @@ const Input = () => {
                         />
                         <BiCamera className="upBtn" id="textInput" style={{ marginRight: 0 }} onClick={onUploadFile}/>
                         <input type="file" id="textInput" ref={fileuploader} hidden />
-                        <BiUpArrowAlt className="upBtn" id="textInput" onClick={() => console.log('submit')}/>
+                        <BiUpArrowAlt className="upBtn" id="textInput" onClick={onSubmit}/>
                     </div>:
                     <BiPlus className="fab" onClick={activeToggle} />
                 }   

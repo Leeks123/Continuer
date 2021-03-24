@@ -4,6 +4,7 @@ import LandingPage from './page/LandingPage';
 import TimeLinePage from './page/TimeLinePage';
 
 function App() {
+
   return (
     <BrowserRouter>
     <Switch>

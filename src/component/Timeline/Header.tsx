@@ -11,9 +11,10 @@ const Wrapper = styled.header`
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 1;
 
     background: ${palette[0]};
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
 
     @media (min-width: ${mediaQuery.tablet}px) {
         height: 4rem;
