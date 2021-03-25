@@ -25,7 +25,6 @@ const circleToBox = keyframes`
     from {
         border-radius: 50%;
         width: 3rem;
-        height: 3rem;
         background: ${palette[6]};
     }
     to {
@@ -37,7 +36,7 @@ const circleToBox = keyframes`
 `;
 const Wrapper = styled.div<StyledProps>`
     width: 3rem;
-    height: 3rem;
+    ${(props) => props.active === false && `height: 3rem;`}
 
     position: absolute;
     bottom: 1rem;
@@ -62,39 +61,24 @@ const Wrapper = styled.div<StyledProps>`
         ${props.pos === FABposition.Center ? `transform: translateX(calc(-50% + 1.5rem));`:''}
     `}
     ${(props) => props.active && props.move ?
-        props.move === FABmove.Right ? `transform: translateX(20rem);transition: transform 0.5s ease-in;` :
-        props.move === FABmove.Left ? `transform: translateX(-20rem);transition: transform 0.5s ease-in;` : 
+        props.move === FABmove.Right ? `transform: translateX(2000px);transition: transform 1s linear;` :
+        props.move === FABmove.Left ? `transform: translateX(-2000px);transition: transform 1s linear;` : 
         `transform: translateY(5rem);transition: transform 0.5s ease-in;`:''
     }
-`;
-const Toast = styled.div`
-    max-width: 500px;
-    width: 100vw;
-    height: 200px;
-    background: ${palette[6]};
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    position: absolute;
-    transform: translate(-45%,-90%);
-    border-radius: 50px 50px 0 0;
-
 `;
 
 type FABProps = {
     pos: string,
     toBox?: boolean | false,
     moveTo?: string,
-    children?: React.ReactNode
+    children?: React.ReactNode,
+    toggle: () => void,
+    active: boolean
 }
-const FAB = ({ pos,toBox,moveTo, children }:FABProps) => {
-    const [isActive,setActive] = useState<boolean>(false);
-    const activeToggle = () => {
-        setActive(!isActive);
-    };
-    console.log(isActive);
+const FAB = ({ pos,toBox,moveTo, children,active, toggle }:FABProps) => {
     return (
-        <Wrapper pos={pos} active={isActive} toBox={toBox} move={moveTo}>
-            {toBox && isActive && children ? (children) :<BiPlus className="fab" onClick={activeToggle}/>}
-            {moveTo && children && <Toast >{children}</Toast>}
+        <Wrapper pos={pos} active={active} toBox={toBox} move={moveTo}>
+            {toBox && active && children ? (children) :<BiPlus className="fab" onClick={toggle}/>}
         </Wrapper>
     );
 };

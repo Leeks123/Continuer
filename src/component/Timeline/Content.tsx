@@ -46,9 +46,6 @@ const Content = () => {
             <Container>
                 {data.map((v) => <Card text={v.text} date={v.date}/>)}
             </Container>
-            <FAB pos='center' moveTo='left'>
-                <div>fdkjfk</div>
-            </FAB>
         </Wrapper>
     );
 };
