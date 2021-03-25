@@ -20,7 +20,7 @@ const TimeLinePage = () => {
         <Wrapper>
             <Header/>
             <Content/>
-            <Input />
+            {/* <Input /> */}
         </Wrapper>
     );
 };

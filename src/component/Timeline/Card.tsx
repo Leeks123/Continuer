@@ -55,6 +55,7 @@ const Branch = styled.div`
     width: 20%;
     margin-top: 1.5rem;
     border-right: 0.25rem solid ${palette[5]};
+
 `;
 const Node = styled.div`
     position: relative;
@@ -72,9 +73,11 @@ const Node = styled.div`
             left: calc(100% - 4.5rem);
         }
         @media (min-width: ${mediaQuery.tablet}px) {
+            // left: calc(100% - 5rem);
         }
         @media (min-width: ${mediaQuery.laptop}px) {
-            font-size: 1.25rem;
+            font-size: 1rem;
+            left: calc(100% - 6rem);
         }
     }
     & .dot {

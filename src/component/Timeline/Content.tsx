@@ -6,12 +6,13 @@ import { useAppSelector } from '../../hooks/redux';
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
 import Card from './Card';
+import FAB from './FAB';
 
 const Wrapper = styled.main`
     width: 100%;
     height: 100vh;
     
-    padding-bottom: 7rem;
+    padding-bottom: 3rem;
     overflow: scroll;
 
     background: ${palette[3]};
@@ -45,6 +46,9 @@ const Content = () => {
             <Container>
                 {data.map((v) => <Card text={v.text} date={v.date}/>)}
             </Container>
+            <FAB pos='center' moveTo='left'>
+                <div>fdkjfk</div>
+            </FAB>
         </Wrapper>
     );
 };
