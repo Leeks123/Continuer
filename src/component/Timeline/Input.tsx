@@ -22,6 +22,10 @@ const TextInput = styled.div`
         border: none;
 
         font-size: 1.25rem;
+
+        &:focus {
+            outline: none;
+        }
     }
     .upBtn {
         border: 3px solid black;
@@ -68,6 +72,10 @@ const ToastInput = styled.div`
         border: none;
 
         font-size: 1.25rem;
+        
+        &:focus {
+            outline: none;
+        }
     }
     & > div {
         flex: 1;

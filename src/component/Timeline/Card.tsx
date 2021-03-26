@@ -5,8 +5,12 @@ import { format } from 'date-fns';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
+import useWindowWidth from '../../hooks/layout';
 
-const Wrapper = styled.section`
+type styleProps = {
+    right?: boolean,
+}
+const Wrapper = styled.section<styleProps>`
     width: 100%;
     box-sizing: content-box;
 
@@ -15,17 +19,20 @@ const Wrapper = styled.section`
     @media (min-width: ${mediaQuery.mobile}px) {
     }
     @media (min-width: ${mediaQuery.tablet}px) {
+        width: 50%;
+        ${(props) => props.right && `
+            transform: translateX(99%);
+        `}
     }
     @media (min-width: ${mediaQuery.laptop}px) {
     }
 `;
 
-const Leaf = styled.div`
-    // flex:1;
+const Leaf = styled.div<styleProps>`
     width: 80%;
     height: 85%;
 
-    margin: 1rem 0;
+    margin: 0.25rem 0 1rem 0;
     padding: 1rem;
 
     position: relative;
@@ -35,6 +42,9 @@ const Leaf = styled.div`
     background: ${palette[0]};
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border-radius: 20px 0px 20px 0px;
+    ${(props) => props.right && `
+        border-radius: 0px 20px 0px 20px;
+    `}
 
     box-sizing: border-box;
 
@@ -43,27 +53,27 @@ const Leaf = styled.div`
     &:hover {
         transform: scale(1.03);   
     }
-
     p {
         word-break: normal;
         word-wrap: break-word;
         margin: 0;
-
     }
 `;
-const Branch = styled.div`
+const Branch = styled.div<styleProps>`
     width: 20%;
     margin-top: 1.5rem;
-    border-right: 0.25rem solid ${palette[5]};
-
+    ${(props) => props.right ?
+        `border-left: 0.25rem solid ${palette[5]};`:
+        `border-right: 0.25rem solid ${palette[5]};`
+    }
 `;
-const Node = styled.div`
+const Node = styled.div<styleProps>`
     position: relative;
     .time {
-        position: relative;
+        position: absolute;
         opacity: 0.5;
-        margin: 0 2rem 0 0rem;
-        top: -1.75rem;
+        margin: 0 2rem 0 0;
+        top: -1.25rem;
         left: calc(100% - 3.5rem);
         font-size: 0.5rem;
         
@@ -73,11 +83,13 @@ const Node = styled.div`
             left: calc(100% - 4.5rem);
         }
         @media (min-width: ${mediaQuery.tablet}px) {
-            // left: calc(100% - 5rem);
+            ${(props) => props.right ? 
+                'left: calc(100% - 3.5rem);':
+                'left: calc(100% - 4rem);'}
         }
         @media (min-width: ${mediaQuery.laptop}px) {
-            font-size: 1rem;
-            left: calc(100% - 6rem);
+            // font-size: 1rem;
+            left: calc(100% - 4rem);
         }
     }
     & .dot {
@@ -87,7 +99,7 @@ const Node = styled.div`
         border-radius: 50%;
 
         position: relative;
-        left: calc(100% - 6px);
+        ${(props) => props.right ? `left: -10px;`:`left: calc(100% - 6px);`}
         bottom: 1.25rem;
     }
 `;
@@ -95,20 +107,37 @@ const Node = styled.div`
 type CardProps = {
     text: string,
     date: string,
+    rightSide?: boolean,
 }
-const Card = ({ text, date }:CardProps) => {
+const Card = ({ text, date, rightSide }:CardProps) => {
+    const windowWidth = useWindowWidth();
     return (
-        <Wrapper>
-            <Leaf >
-                {text.split('\n').map( line => (<p>{line}</p>))}
-            </Leaf>
-            <Branch>
-                <Node>
-                    <div className="dot"></div>
-                    <small className="time">{format(Date.parse(date),'HH:mm:ss')}</small>
-                </Node>
-            </Branch>
-        </Wrapper>
+        <>
+        {rightSide && windowWidth >= mediaQuery.tablet ?
+            <Wrapper right={rightSide}>
+                <Branch right={rightSide}>
+                    <Node right={rightSide}>
+                        <div className="dot"></div>
+                        <small className="time">{format(Date.parse(date),'HH:mm:ss')}</small>
+                    </Node>
+                </Branch>
+                <Leaf right={rightSide}>
+                    {text.split('\n').map( line => (<p>{line}</p>))}
+                </Leaf>
+            </Wrapper>:
+            <Wrapper>
+                <Leaf >
+                    {text.split('\n').map( line => (<p>{line}</p>))}
+                </Leaf>
+                <Branch>
+                    <Node>
+                        <div className="dot"></div>
+                        <small className="time">{format(Date.parse(date),'HH:mm:ss')}</small>
+                    </Node>
+                </Branch>
+            </Wrapper>
+        }
+        </>
     );
 };
 

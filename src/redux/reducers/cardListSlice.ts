@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../store/configureStore';
 
-interface CardState {
+export interface CardState {
   text: string,
   date: string,
 }
@@ -9,11 +9,12 @@ interface CardListState {
     cardlist: CardState[],
 }
 function getDummyCardList():CardState[] {
-  const ret = new Array(10).fill(0);
+  const ret = new Array(20).fill(0);
+  const now = Date.now();
   return ret.map((v,i) => ({
     text: `${i} sdfjkwjgiajigjidjsigfjwijgia`,
-    date: new Date().toString(),
-  }));
+    date: new Date(now - 3600000*2*i).toString(),
+  })).reverse();
   
 }
 const initialState: CardListState = {
