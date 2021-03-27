@@ -9,7 +9,7 @@ import { format } from 'date-fns';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
-import useWindowWidth from '../../hooks/layout';
+import { useWindowWidth } from '../../hooks/layout';
 import FAB from './FAB';
 
 const TextInput = styled.div`

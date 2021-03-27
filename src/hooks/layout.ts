@@ -4,8 +4,12 @@ function getWindowWidth() {
   const { innerWidth: width } = window;
   return width;
 }
+function getWindowHeight() {
+    const { innerHeight: height } = window;
+    return height;
+}
 
-export default function useWindowWidth():number {
+function useWindowWidth():number {
     const [windowWidth, setWindowWidth] = useState<number>(getWindowWidth());
 
   useEffect(() => {
@@ -19,3 +23,20 @@ export default function useWindowWidth():number {
 
   return windowWidth;
 }
+
+function useWindowHeight():number {
+    const [windowHeight, setWindowHeight] = useState<number>(getWindowHeight());
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowHeight(getWindowHeight());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowHeight;
+}
+
+export { useWindowWidth, useWindowHeight}

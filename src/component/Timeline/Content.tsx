@@ -27,7 +27,7 @@ const Wrapper = styled.main`
 `;
 
 const Container = styled.div`
-    padding: 0 1rem;
+    padding: 0 1.5rem;
 
     @media (min-width: ${mediaQuery.tablet}px) {
         padding: 0 2.5rem;
@@ -49,13 +49,13 @@ const Content = () => {
             setDataCounter(data.length);
             scroll.current?.scroll({top:scroll.current?.scrollHeight,left:0, behavior:'smooth'});
         }
-        console.log(scroll.current?.scrollTop);
+        // console.log(scroll.current?.scrollTop);
     },[data,dataCounter]);
 
     
 
     function handleScroll() {
-      console.log(scroll.current?.scrollTop);
+    //   console.log(scroll.current?.scrollTop);
     }
   
     useEffect(() => {

@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
-import useWindowWidth from '../../hooks/layout';
+import { useWindowWidth } from '../../hooks/layout';
 
 type styleProps = {
     right?: boolean,
@@ -109,12 +109,12 @@ type CardProps = {
     date: string,
     rightSide?: boolean,
 }
-const Card = ({ text, date, rightSide }:CardProps) => {
+const Card = React.forwardRef<HTMLElement, CardProps>(({ text, date, rightSide }, ref) => {
     const windowWidth = useWindowWidth();
     return (
         <>
         {rightSide && windowWidth >= mediaQuery.tablet ?
-            <Wrapper right={rightSide}>
+            <Wrapper ref={ref} right={rightSide} data-date={date}>
                 <Branch right={rightSide}>
                     <Node right={rightSide}>
                         <div className="dot"></div>
@@ -125,7 +125,7 @@ const Card = ({ text, date, rightSide }:CardProps) => {
                     {text.split('\n').map( line => (<p>{line}</p>))}
                 </Leaf>
             </Wrapper>:
-            <Wrapper>
+            <Wrapper ref={ref} data-date={date}>
                 <Leaf >
                     {text.split('\n').map( line => (<p>{line}</p>))}
                 </Leaf>
@@ -139,6 +139,6 @@ const Card = ({ text, date, rightSide }:CardProps) => {
         }
         </>
     );
-};
+});
 
 export default Card;
