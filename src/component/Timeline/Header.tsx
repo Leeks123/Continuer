@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+
+import { useAppSelector } from '../../hooks/redux';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
+import { setDate } from 'date-fns/esm';
 
 const Wrapper = styled.header`
     width: 100%;
@@ -43,11 +46,23 @@ const YearMonth = styled.div`
 `;
 
 const Header = () => {
+    const listDate = useAppSelector((state) => state.content.topElDate);
+    const [date, setDate] = useState({
+        year: new Date().getFullYear(),
+        month: new Date().getMonth()
+    })
+    const monthWords = [
+        'January','February','March','April','May','June','July','August','September','October','November','December'
+    ]
+    useEffect(() => {
+        setDate(listDate);
+    }, [listDate]);
+
     return (
         <Wrapper>
             <Container>
                 <YearMonth>
-                    <span>March  <small>2021</small></span>
+                    <span>{monthWords[date.month]}  <small>{date.year}</small></span>
                 </YearMonth>
             </Container>
         </Wrapper>

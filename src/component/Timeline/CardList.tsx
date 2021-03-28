@@ -1,11 +1,16 @@
-import React, { useEffect, useState, useRef, createRef, RefObject } from 'react';
-import { getDate } from 'date-fns';
+import React, { useEffect, useState, createRef, RefObject } from 'react';
+import { getDate, getMonth, getYear } from 'date-fns';
 
 import Card from './Card';
 import { CardState } from '../../redux/reducers/cardListSlice';
 import DayNode from './DayNode';
 import { useWindowHeight } from '../../hooks/layout';
-import { useAppSelector } from '../../hooks/redux';
+import { useAppDispatch } from '../../hooks/redux';
+import { changeDate } from '../../redux/reducers/cardListSlice';
+
+import img01 from '../../utils/images/img01.jpg';
+import img02 from '../../utils/images/img02.jpg';
+import img03 from '../../utils/images/img03.png';
 
 type CardListProps = {
     data: CardState[]
@@ -13,8 +18,13 @@ type CardListProps = {
 const CardList = ({ data }:CardListProps) => {
     let sideFlag = false
     const dateChangePoint:CardState[] = data.filter((v,i) => {
-        if (data[i+1]){
-            return getDate(Date.parse(v.date))<getDate(Date.parse(data[i+1].date))
+        if (data[i-1]){
+            const curDate = getDate(Date.parse(v.date));
+            const prevDate = getDate(Date.parse(data[i-1].date))
+            if (curDate === 1 && prevDate !== 1) {
+                return true;
+            }
+            return curDate > prevDate;
         }
         return false;
     });
@@ -22,37 +32,42 @@ const CardList = ({ data }:CardListProps) => {
 
     const [elRefs, setElRefs] = useState<RefObject<HTMLElement>[]>([]);
     const windowHeight = useWindowHeight();
-    const currentMonth = useAppSelector((state) => state.content.month);
+    const dispatch = useAppDispatch();
     useEffect(() => {
         setElRefs(elRefs => (
             Array(data.length).fill(0).map((_, i) => elRefs[i] || createRef())
         ));
     }, [data]);
     useEffect(() => {
-        console.log(currentMonth);
         const option = {
             root: null,
             rootMargin: `0px 0px -${windowHeight - 60}px 0px`,
             threshold: 0,
         }
         const io = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                
+            entries.forEach(entry => { 
                 if (entry.intersectionRatio > 0) {
-                    console.log((entry.target as HTMLElement).dataset.date);
+                    // console.log((entry.target as HTMLElement).dataset.date);
+                    const topElDate = (entry.target as HTMLElement).dataset.date;
+                    
+                    if(topElDate !== undefined) {
+                        dispatch(changeDate({
+                            year: getYear(Date.parse(topElDate)),
+                            month: getMonth(Date.parse(topElDate))
+                        }));
 
+                        // console.log(topElDate);
+                    }
                 }
             })
         }, option);
 
         elRefs.forEach((el,i) => {
-            // console.log(el,i);
             if (el.current) {
                 io.observe(el.current);
             }
         });
-        // console.log(elRefs);
-    }, [elRefs]);
+    }, [elRefs, windowHeight]);
 
     return (
         <div>
@@ -61,14 +76,15 @@ const CardList = ({ data }:CardListProps) => {
                     sideFlag = !sideFlag;
                     return (
                         <>
-                            <Card ref={elRefs[i]} text={v.text} date={v.date} rightSide={!sideFlag}/>
                             <DayNode date={dateList[dateChangePoint.indexOf(v)]} rightSide={!sideFlag}/>
+                            <Card ref={elRefs[i]} text={v.text} date={v.date} rightSide={sideFlag}/>
                         </>
                     )
                 } else {
-                    return <Card ref={elRefs[i]} text={v.text} date={v.date} rightSide={sideFlag}/>;
+                    return <Card ref={elRefs[i]} text={v.text} date={v.date} rightSide={sideFlag} images={[img01,img02,img03]}/>;
                 }
             })}
+            
         </div>
     );
 };

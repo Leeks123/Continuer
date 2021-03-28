@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
 import { useWindowWidth } from '../../hooks/layout';
+import ImageBox from './ImageBox';
 
 type styleProps = {
     right?: boolean,
@@ -74,7 +75,7 @@ const Node = styled.div<styleProps>`
         opacity: 0.5;
         margin: 0 2rem 0 0;
         top: -1.25rem;
-        left: calc(100% - 3.5rem);
+        left: calc(100% - 2.75rem);
         font-size: 0.5rem;
         
         @media (min-width: ${mediaQuery.mobile}px) {
@@ -108,8 +109,9 @@ type CardProps = {
     text: string,
     date: string,
     rightSide?: boolean,
+    images?: string[],
 }
-const Card = React.forwardRef<HTMLElement, CardProps>(({ text, date, rightSide }, ref) => {
+const Card = React.forwardRef<HTMLElement, CardProps>(({ text, date, rightSide, images }, ref) => {
     const windowWidth = useWindowWidth();
     return (
         <>
@@ -118,21 +120,23 @@ const Card = React.forwardRef<HTMLElement, CardProps>(({ text, date, rightSide }
                 <Branch right={rightSide}>
                     <Node right={rightSide}>
                         <div className="dot"></div>
-                        <small className="time">{format(Date.parse(date),'HH:mm:ss')}</small>
+                        <small className="time">{format(Date.parse(date),'HH:mm')}</small>
                     </Node>
                 </Branch>
                 <Leaf right={rightSide}>
+                    {images && <ImageBox images={images} />}
                     {text.split('\n').map( line => (<p>{line}</p>))}
                 </Leaf>
             </Wrapper>:
             <Wrapper ref={ref} data-date={date}>
                 <Leaf >
+                    {images && <ImageBox images={images} />}
                     {text.split('\n').map( line => (<p>{line}</p>))}
                 </Leaf>
                 <Branch>
                     <Node>
                         <div className="dot"></div>
-                        <small className="time">{format(Date.parse(date),'HH:mm:ss')}</small>
+                        <small className="time">{format(Date.parse(date),'HH:mm')}</small>
                     </Node>
                 </Branch>
             </Wrapper>

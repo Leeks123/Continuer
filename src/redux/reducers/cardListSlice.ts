@@ -6,12 +6,16 @@ export interface CardState {
   text: string,
   date: string,
 }
+type DateState = {
+  year: number,
+  month: number
+}
 interface CardListState {
     cardlist: CardState[],
-    month: number,
+    topElDate : DateState,
 }
 function getDummyCardList():CardState[] {
-  const ret = new Array(30).fill(0);
+  const ret = new Array(100).fill(0);
   const now = Date.now();
   return ret.map((v,i) => ({
     text: `${i} sdfjkwjgiajigjidjsigfjwijgia`,
@@ -21,7 +25,10 @@ function getDummyCardList():CardState[] {
 }
 const initialState: CardListState = {
   cardlist: getDummyCardList(),
-  month: getMonth(new Date()),
+  topElDate: {
+    year: new Date().getFullYear(),
+    month: new Date().getMonth()
+  },
 }
 export const cardlistSlice = createSlice({
   name: 'cardlist',
@@ -32,8 +39,8 @@ export const cardlistSlice = createSlice({
         ...state.cardlist, action.payload
       ]
     },
-    changeMonth: (state, action: PayloadAction<number>) => {
-      state.month = action.payload
+    changeDate: (state, action: PayloadAction<DateState>) => {
+      state.topElDate = action.payload
     }
     // decrement: state => {
     //   state.value -= 1
@@ -45,7 +52,7 @@ export const cardlistSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addCard, changeMonth } = cardlistSlice.actions
+export const { addCard, changeDate } = cardlistSlice.actions
 
 // export const selectCount = (state: RootState) => state.counter.value
 
