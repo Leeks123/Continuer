@@ -65,6 +65,8 @@ const Wrapper = styled.div<StyledProps>`
         props.move === FABmove.Left ? `transform: translateX(-2000px);transition: transform 1s linear;` : 
         `transform: translateY(5rem);transition: transform 0.5s ease-in;`:''
     }
+
+    cursor: pointer;
 `;
 
 type FABProps = {

@@ -156,9 +156,9 @@ const Input = () => {
                             onChange={onTyped} 
                             placeholder="Input your moment"
                         />
-                        <BiCamera className="upBtn" data-value="textinput" style={{ marginRight: 0 }} onClick={onUploadFile}/>
+                        <BiCamera className="upBtn" data-value="textinput" style={{ marginRight: 0, cursor: "pointer" }} onClick={onUploadFile}/>
                         <input type="file" data-value="textinput" ref={fileuploader} hidden />
-                        <BiUpArrowAlt className="upBtn" data-value="textinput" onClick={onSubmit}/>
+                        <BiUpArrowAlt className="upBtn" data-value="textinput" style={{ cursor: "pointer" }} onClick={onSubmit}/>
                     </TextInput>
                 </FAB>
             </div> :
@@ -175,9 +175,9 @@ const Input = () => {
                             placeholder="Input your moment"
                         />
                         <div data-value="textinput">
-                            <BiCamera className="upBtn" data-value="textinput" style={{ marginRight: 0 }} onClick={onUploadFile}/>
+                            <BiCamera className="upBtn" data-value="textinput" style={{ marginRight: 0, cursor: "pointer" }} onClick={onUploadFile}/>
                             <input type="file" data-value="textinput" ref={fileuploader} hidden />
-                            <BiUpArrowAlt className="upBtn" data-value="textinput" onClick={onSubmit}/>
+                            <BiUpArrowAlt className="upBtn" data-value="textinput" style={{ cursor: "pointer" }} onClick={onSubmit}/>
                         </div>
                     </ToastInput>
                 </Toast>

@@ -36,8 +36,6 @@ const Leaf = styled.div<styleProps>`
     margin: 0.25rem 0 1rem 0;
     padding: 1rem;
 
-    position: relative;
-
     overflow: hidden;
     
     background: ${palette[0]};
@@ -59,6 +57,15 @@ const Leaf = styled.div<styleProps>`
         word-wrap: break-word;
         margin: 0;
     }
+
+    @media (min-width: ${mediaQuery.mobile}px) {
+        width: 85%;
+    }
+    @media (min-width: ${mediaQuery.tablet}px) {
+        width: 80%;
+    }
+    @media (min-width: ${mediaQuery.laptop}px) {
+    }
 `;
 const Branch = styled.div<styleProps>`
     width: 20%;
@@ -66,6 +73,14 @@ const Branch = styled.div<styleProps>`
     ${(props) => props.right ?
         `border-left: 0.25rem solid ${palette[5]};`:
         `border-right: 0.25rem solid ${palette[5]};`
+    }
+    @media (min-width: ${mediaQuery.mobile}px) {
+        width: 15%;
+    }
+    @media (min-width: ${mediaQuery.tablet}px) {
+        width: 20%;
+    }
+    @media (min-width: ${mediaQuery.laptop}px) {
     }
 `;
 const Node = styled.div<styleProps>`
@@ -81,16 +96,15 @@ const Node = styled.div<styleProps>`
         @media (min-width: ${mediaQuery.mobile}px) {
             font-size: 0.75rem;
             top: -1.25rem;
-            left: calc(100% - 4.5rem);
+            left: calc(100% - 3rem);
         }
         @media (min-width: ${mediaQuery.tablet}px) {
             ${(props) => props.right ? 
-                'left: calc(100% - 3.5rem);':
-                'left: calc(100% - 4rem);'}
+                'left: calc(100% - 3rem);':
+                'left: calc(100% - 3rem);'}
         }
         @media (min-width: ${mediaQuery.laptop}px) {
-            // font-size: 1rem;
-            left: calc(100% - 4rem);
+            left: calc(100% - 3.25rem);
         }
     }
     & .dot {
