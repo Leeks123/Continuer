@@ -43,7 +43,11 @@ type ImageZoomProps = {
     onClose: () => void,
 }
 const ImageZoom = ({ images, firstImg, onClose }:ImageZoomProps) => {
-    
+    const sliderRef = useRef<any>();
+
+    useEffect(() => {
+            sliderRef.current?.slickGoTo(firstImg);
+    }, []);
     
     const settings = {
         dots: true,
@@ -56,7 +60,7 @@ const ImageZoom = ({ images, firstImg, onClose }:ImageZoomProps) => {
         <Wrapper>
             <StyledX onClick={onClose} />
             <div style={{ marginTop: '2.5rem' }} />
-            <StyledSlider {...settings} >
+            <StyledSlider {...settings} ref={sliderRef}>
                 {images.map((image) => (
                     <Image url={image}/>
                 ))}

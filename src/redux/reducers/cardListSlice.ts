@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { RootState } from '../store/configureStore';
 import { getMonth } from 'date-fns';
 
@@ -13,23 +13,51 @@ type DateState = {
 interface CardListState {
     cardlist: CardState[],
     topElDate : DateState,
+    firstRender: boolean,
+    scrollState: boolean,
+    error: null | string,
 }
 function getDummyCardList():CardState[] {
-  const ret = new Array(100).fill(0);
+  const ret = new Array(300).fill(0);
   const now = Date.now();
   return ret.map((v,i) => ({
     text: `${i} sdfjkwjgiajigjidjsigfjwijgia`,
     date: new Date(now - 3600000*6*i).toString(),
-  })).reverse();
-  
+  }));
 }
+const data = getDummyCardList();
+let offset = 0;
+function getPageData() {
+  let ret = data.slice(offset,offset+10);
+  offset += 10;
+  return ret.reverse();
+}
+
+
+export const loadPageData = createAsyncThunk(
+  'cardlist/loadPageData',
+  async (thunkAPI) => {
+    try {
+      const data = await getPageData();
+      return data as CardState[];
+    } catch(err) {
+      return err.toString();
+    }
+  },
+)
+
+
 const initialState: CardListState = {
-  cardlist: getDummyCardList(),
+  cardlist: [],
   topElDate: {
     year: new Date().getFullYear(),
     month: new Date().getMonth()
   },
+  firstRender: false,
+  scrollState: false,
+  error: null
 }
+
 export const cardlistSlice = createSlice({
   name: 'cardlist',
   initialState,
@@ -41,18 +69,24 @@ export const cardlistSlice = createSlice({
     },
     changeDate: (state, action: PayloadAction<DateState>) => {
       state.topElDate = action.payload
+    },
+    firstRenderFin: (state, action: PayloadAction<boolean>) => {
+      state.firstRender = action.payload
+    },
+    prepareLoadData: (state, action: PayloadAction<boolean>) => {
+      state.scrollState = action.payload
     }
-    // decrement: state => {
-    //   state.value -= 1
-    // },
-    // incrementByAmount: (state, action: PayloadAction<number>) => {
-    //     state.value += action.payload
-    //   }
-  }
+  },
+  extraReducers: builder => {
+    builder.addCase(loadPageData.fulfilled, (state, action) => {
+      state.cardlist = [...action.payload, ...state.cardlist]
+    })
+  },
+  
 })
 
 // Action creators are generated for each case reducer function
-export const { addCard, changeDate } = cardlistSlice.actions
+export const { addCard, changeDate, firstRenderFin, prepareLoadData } = cardlistSlice.actions
 
 // export const selectCount = (state: RootState) => state.counter.value
 

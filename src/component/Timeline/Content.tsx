@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 
-import { useAppSelector } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { firstRenderFin, loadPageData, prepareLoadData } from '../../redux/reducers/cardListSlice';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
@@ -40,24 +41,58 @@ const Container = styled.div`
 
 
 const Content = () => {
+    const dispatch = useAppDispatch();
     const data = useAppSelector(state => state.content.cardlist);
+    const isRenderFin = useAppSelector(state => state.content.firstRender);
+    const readyToLoad = useAppSelector(state => state.content.scrollState);
     const scroll = useRef<HTMLDivElement>(null);
-    const [dataCounter, setDataCounter] = useState<number>(data.length-1);
 
-    useEffect(() => {
+    const [dataCounter, setDataCounter] = useState<number>(9);
+    const [scrollHeight, setScrollHeight] = useState<number>(0);
+
+    useEffect(() => { // 초기 렌더링,, 초기 데이터 로드
+        dispatch(loadPageData());
+        console.log('fin');
+        setTimeout(() => {
+            dispatch(firstRenderFin(true));
+        },1000);
+    }, []);
+
+    useLayoutEffect(() => { // 새로운 카드를 생성했을 떄 스크롤 액션
         if(dataCounter + 1 === data.length) {
             setDataCounter(data.length);
             scroll.current?.scroll({top:scroll.current?.scrollHeight,left:0, behavior:'smooth'});
+            if(scroll.current?.scrollHeight) {
+                setScrollHeight(scroll.current?.scrollHeight);
+            }
         }
-        // console.log(scroll.current?.scrollTop);
+        if(dataCounter + 10 === data.length) {
+            setDataCounter(data.length);
+            scroll.current?.scroll({
+                top:scroll.current?.scrollHeight - scrollHeight,
+                left:0
+            });
+            if(scroll.current?.scrollHeight) {
+                setScrollHeight(scroll.current?.scrollHeight);
+            }
+            dispatch(prepareLoadData(false));
+        }
     },[data,dataCounter]);
 
-    
+
+    useEffect(() => {
+        if(readyToLoad) {
+            dispatch(loadPageData());
+        }
+    }, [readyToLoad])
 
     function handleScroll() {
     //   console.log(scroll.current?.scrollTop);
+      if (isRenderFin && scroll.current?.scrollTop && scroll.current?.scrollTop < 100) {
+          console.log('need to load data');
+          dispatch(prepareLoadData(true));
+      }
     }
-  
     useEffect(() => {
       function watchScroll() {
         scroll.current?.addEventListener("scroll", handleScroll);
@@ -66,7 +101,7 @@ const Content = () => {
       return () => {
         scroll.current?.removeEventListener("scroll", handleScroll);
       };
-    }, []);
+    }, [isRenderFin]);
 
     return (
         <Wrapper ref={scroll}>

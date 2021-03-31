@@ -77,11 +77,11 @@ const CardList = ({ data }:CardListProps) => {
                     return (
                         <>
                             <DayNode date={dateList[dateChangePoint.indexOf(v)]} rightSide={!sideFlag}/>
-                            <Card ref={elRefs[i]} text={v.text} date={v.date} rightSide={sideFlag}/>
+                            <Card ref={elRefs[i]} text={v.text} date={v.date} rightSide={sideFlag} images={[img01,img02,img03]}/>
                         </>
                     )
                 } else {
-                    return <Card ref={elRefs[i]} text={v.text} date={v.date} rightSide={sideFlag} images={[img01,img02,img03]}/>;
+                    return <Card ref={elRefs[i]} text={v.text} date={v.date} rightSide={sideFlag} />;
                 }
             })}
             
