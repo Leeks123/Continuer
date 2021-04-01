@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { firstRenderFin, loadPageData, prepareLoadData } from '../../redux/reducers/cardListSlice';
+import { loadPageData, prepareLoadData } from '../../redux/reducers/cardListSlice';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
@@ -43,7 +43,6 @@ const Container = styled.div`
 const Content = () => {
     const dispatch = useAppDispatch();
     const data = useAppSelector(state => state.content.cardlist);
-    const isRenderFin = useAppSelector(state => state.content.firstRender);
     const readyToLoad = useAppSelector(state => state.content.scrollState);
     const scroll = useRef<HTMLDivElement>(null);
 
@@ -52,21 +51,18 @@ const Content = () => {
 
     useEffect(() => { // 초기 렌더링,, 초기 데이터 로드
         dispatch(loadPageData());
-        console.log('fin');
-        setTimeout(() => {
-            dispatch(firstRenderFin(true));
-        },1000);
+        console.log('first render fin');
     }, []);
 
     useLayoutEffect(() => { // 새로운 카드를 생성했을 떄 스크롤 액션
-        if(dataCounter + 1 === data.length) {
+        if(dataCounter + 1 === data.length) { // 추가 되었을 때 바닥으로 스크롤
             setDataCounter(data.length);
             scroll.current?.scroll({top:scroll.current?.scrollHeight,left:0, behavior:'smooth'});
             if(scroll.current?.scrollHeight) {
                 setScrollHeight(scroll.current?.scrollHeight);
             }
         }
-        if(dataCounter + 10 === data.length) {
+        if(dataCounter + 10 === data.length ) { // 인피니티 스크롤로 로드 완료 후 스크롤 포지션 유지
             setDataCounter(data.length);
             scroll.current?.scroll({
                 top:scroll.current?.scrollHeight - scrollHeight,
@@ -77,18 +73,31 @@ const Content = () => {
             }
             dispatch(prepareLoadData(false));
         }
+        if(dataCounter -1 === data.length ) { // 카드 삭제시 스크롤 유지
+            setDataCounter(data.length);
+            console.log('card delete',`scroll to ${scroll.current?.scrollTop}` )
+            scroll.current?.scroll({
+                top:scroll.current?.scrollTop,
+                left:0
+            });
+            if(scroll.current?.scrollHeight) {
+                setScrollHeight(scroll.current?.scrollHeight);
+            }
+            dispatch(prepareLoadData(false));
+        }
+
     },[data,dataCounter]);
 
 
-    useEffect(() => {
+    useEffect(() => { // 스크롤 확인 후 데이터 로딩
         if(readyToLoad) {
             dispatch(loadPageData());
         }
-    }, [readyToLoad])
+    }, [readyToLoad]);
 
     function handleScroll() {
-    //   console.log(scroll.current?.scrollTop);
-      if (isRenderFin && scroll.current?.scrollTop && scroll.current?.scrollTop < 100) {
+      console.log(scroll.current?.scrollTop);
+      if (scroll.current?.scrollTop && scroll.current?.scrollTop < 100) { // 첫 렌더 이후 스크롤 감지
           console.log('need to load data');
           dispatch(prepareLoadData(true));
       }
@@ -101,8 +110,9 @@ const Content = () => {
       return () => {
         scroll.current?.removeEventListener("scroll", handleScroll);
       };
-    }, [isRenderFin]);
+    }, []);
 
+    console.log('content')
     return (
         <Wrapper ref={scroll}>
             <Container>

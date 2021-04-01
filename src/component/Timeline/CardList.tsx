@@ -68,7 +68,8 @@ const CardList = ({ data }:CardListProps) => {
             }
         });
     }, [elRefs, windowHeight]);
-
+    
+    console.log('cardlist')
     return (
         <div>
             {data.map((v,i) => {
@@ -77,11 +78,17 @@ const CardList = ({ data }:CardListProps) => {
                     return (
                         <>
                             <DayNode date={dateList[dateChangePoint.indexOf(v)]} rightSide={!sideFlag}/>
-                            <Card ref={elRefs[i]} text={v.text} date={v.date} rightSide={sideFlag} images={[img01,img02,img03]}/>
+                            <Card 
+                                ref={elRefs[i]} 
+                                text={v.text} 
+                                id={v.id}
+                                date={v.date} 
+                                rightSide={sideFlag} 
+                            />
                         </>
                     )
                 } else {
-                    return <Card ref={elRefs[i]} text={v.text} date={v.date} rightSide={sideFlag} />;
+                    return (<Card ref={elRefs[i]} text={v.text} id={v.id} date={v.date} rightSide={sideFlag} />);
                 }
             })}
             

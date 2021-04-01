@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { BiUpArrowAlt, BiCamera } from 'react-icons/bi';
 
-import { useAppDispatch } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { addCard } from '../../redux/reducers/cardListSlice';
 
 import { format } from 'date-fns';
@@ -13,6 +13,7 @@ import { useWindowWidth } from '../../hooks/layout';
 import FAB from './FAB';
 
 const TextInput = styled.div`
+    z-index: 5;
     display: flex;
     textarea {
         width: calc(100% - 5rem);
@@ -41,6 +42,7 @@ type ToastProps = {
     active?: boolean,
 }
 const Toast = styled.div<ToastProps>`
+    z-index: 5;
     width: 100%;
     max-width: ${mediaQuery.tablet}px;
     height: 35vh;
@@ -92,6 +94,7 @@ const ToastInput = styled.div`
 
 const Input = () => {
     const dispatch = useAppDispatch();
+    const lastID = useAppSelector(state => state.content.lastID);
     const [isActive,setActive] = useState<boolean>(false);
     const [typedText, setText] = useState<string>('');
     const textArea = useRef<HTMLTextAreaElement>(null);
@@ -120,9 +123,10 @@ const Input = () => {
         const date = new Date();
         console.log(format(date,'Y LLLL d HH mm ss'));
         dispatch(addCard({
+            id: lastID+1,
             text: typedText,
             date: date.toString()
-        }))
+        }));
         setText('');
         activeToggle();
     }

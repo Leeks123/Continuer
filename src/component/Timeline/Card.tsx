@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
-
+import { useSwipeable } from 'react-swipeable';
+import { BiX } from 'react-icons/bi';
 import { format } from 'date-fns';
 
 import palette from '../../utils/palette';
@@ -8,14 +9,24 @@ import mediaQuery from '../../utils/mediaQuery';
 import { useWindowWidth } from '../../hooks/layout';
 import ImageBox from './ImageBox';
 
+import { deleteCard, prepareLoadData } from '../../redux/reducers/cardListSlice';
+import { useAppDispatch } from '../../hooks/redux';
+
 type styleProps = {
     right?: boolean,
+    swipe?: boolean,
 }
 const Wrapper = styled.section<styleProps>`
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
     width: 100%;
     box-sizing: content-box;
-
+    // margin: 0.25rem 0 1rem 0;
     display: flex;
+    position: relative;
 
     @media (min-width: ${mediaQuery.mobile}px) {
     }
@@ -27,6 +38,10 @@ const Wrapper = styled.section<styleProps>`
     }
     @media (min-width: ${mediaQuery.laptop}px) {
     }
+
+    // .leaf-container {
+    //     background: red;
+    // }
 `;
 
 const Leaf = styled.div<styleProps>`
@@ -34,11 +49,12 @@ const Leaf = styled.div<styleProps>`
     height: 85%;
 
     margin: 0.25rem 0 1rem 0;
-    padding: 1rem;
+    // padding: 1rem;
 
     overflow: hidden;
     
-    background: ${palette[0]};
+    // background: ${palette[0]};
+    background: red;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border-radius: 20px 0px 20px 0px;
     ${(props) => props.right && `
@@ -48,9 +64,11 @@ const Leaf = styled.div<styleProps>`
     box-sizing: border-box;
 
     transition: transform 0.3s ease;
-
     &:hover {
-        transform: scale(1.03);   
+        transform: scale(1.03);
+        span {
+            right: 0.5rem;
+        }
     }
     p {
         word-break: normal;
@@ -65,6 +83,33 @@ const Leaf = styled.div<styleProps>`
         width: 80%;
     }
     @media (min-width: ${mediaQuery.laptop}px) {
+    }
+
+    & > div {
+        position: relative;
+        background: ${palette[0]};
+        padding: 1rem;
+        ${(props) => props.swipe && `
+            left: -3rem;
+        `}
+        z-index: 1;
+    }
+    & > span {
+        position: absolute;
+        top: 20%;
+        ${(props) => props.right ? `
+            left: calc(100% - 2.5rem);
+        `:`
+            right: 23%;
+            @media (min-width: ${mediaQuery.mobile}px) {
+                right: 17.5%;
+            }
+            @media (min-width: ${mediaQuery.tablet}px) {
+                right: 23%;
+            }
+        `}
+        color: white;
+        font-weight: bold;
     }
 `;
 const Branch = styled.div<styleProps>`
@@ -120,42 +165,81 @@ const Node = styled.div<styleProps>`
 `;
 
 type CardProps = {
+    id: number,
     text: string,
     date: string,
     rightSide?: boolean,
     images?: string[],
 }
-const Card = React.forwardRef<HTMLElement, CardProps>(({ text, date, rightSide, images }, ref) => {
+const Card = React.forwardRef<HTMLElement, CardProps>(({ id,text, date, rightSide, images }, ref) => {
     const windowWidth = useWindowWidth();
+    const dispatch = useAppDispatch();
+
+    const onDelete = useCallback(() => {
+        console.log('ondelete', id);
+        dispatch(deleteCard(id));
+        setSwiped(false);
+    }, [id]);
+
+    const [isSwiped,setSwiped] = useState<boolean>(false);
+    const config = {
+        delta: 10,                            // min distance(px) before a swipe starts
+        preventDefaultTouchmoveEvent: false,  // call e.preventDefault *See Details*
+        trackTouch: true,                     // track touch input
+        trackMouse: true,                    // track mouse input
+        rotationAngle: 0,                     // set a rotation angle
+    }
+    const handlers = useSwipeable({
+        onSwipedLeft: (eventData) => {
+            setSwiped(true);
+            console.log("User Swiped!", eventData);
+        },
+        onSwipedRight: (eventData) => {
+            setSwiped(false);
+            console.log("User Swiped!", eventData);
+        },
+        ...config,
+    });
+
     return (
-        <>
+        <div>
         {rightSide && windowWidth >= mediaQuery.tablet ?
-            <Wrapper ref={ref} right={rightSide} data-date={date}>
-                <Branch right={rightSide}>
-                    <Node right={rightSide}>
-                        <div className="dot"></div>
-                        <small className="time">{format(Date.parse(date),'HH:mm')}</small>
-                    </Node>
-                </Branch>
-                <Leaf right={rightSide}>
-                    {images && <ImageBox images={images} />}
-                    {text.split('\n').map( line => (<p>{line}</p>))}
-                </Leaf>
-            </Wrapper>:
-            <Wrapper ref={ref} data-date={date}>
-                <Leaf >
-                    {images && <ImageBox images={images} />}
-                    {text.split('\n').map( line => (<p>{line}</p>))}
-                </Leaf>
-                <Branch>
-                    <Node>
-                        <div className="dot"></div>
-                        <small className="time">{format(Date.parse(date),'HH:mm')}</small>
-                    </Node>
-                </Branch>
-            </Wrapper>
+            <div {...handlers}>
+                <Wrapper ref={ref} right={rightSide} data-date={date} onClick={()=>console.log(id)}>
+                    <Branch right={rightSide}>
+                        <Node right={rightSide}>
+                            <div className="dot"></div>
+                            <small className="time">{format(Date.parse(date),'HH:mm')}</small>
+                        </Node>
+                    </Branch>
+                    <Leaf right={rightSide} swipe={isSwiped}>
+                        <div>
+                            {images && <ImageBox images={images} />}
+                            {text.split('\n').map( line => (<p>{line}</p>))}
+                        </div>
+                        <span><BiX onClick={onDelete} style={{ fontSize: '2rem' }}/></span>
+                    </Leaf>
+                </Wrapper>
+            </div>:
+            <div {...handlers}>
+                <Wrapper ref={ref} data-date={date} onClick={()=>console.log(id)}>
+                    <Leaf swipe={isSwiped}>
+                        <div>
+                            {images && <ImageBox images={images} />}
+                            {text.split('\n').map( line => (<p>{line}</p>))}
+                        </div>
+                        <span><BiX onClick={onDelete} style={{ fontSize: '2rem' }}/></span>
+                    </Leaf>
+                    <Branch>
+                        <Node>
+                            <div className="dot"></div>
+                            <small className="time">{format(Date.parse(date),'HH:mm')}</small>
+                        </Node>
+                    </Branch>
+                </Wrapper>
+            </div>
         }
-        </>
+        </div>
     );
 });
 

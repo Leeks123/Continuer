@@ -14,7 +14,7 @@ const Wrapper = styled.header`
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 5;
 
     background: ${palette[0]};
     box-shadow: 0 0 10px rgba(0,0,0,0.2);

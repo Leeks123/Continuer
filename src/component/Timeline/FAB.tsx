@@ -67,6 +67,7 @@ const Wrapper = styled.div<StyledProps>`
     }
 
     cursor: pointer;
+    z-index: 5;
 `;
 
 type FABProps = {
