@@ -1,12 +1,17 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
+import axios from 'axios';
 import { RootState, AppDispatch } from '../store/configureStore';
 import { getMonth } from 'date-fns';
 import Content from '../../component/Timeline/Content';
 
+axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+
 export interface CardState {
   id: number,
   text: string,
-  date: string,
+  createdAt: string,
+  images: string[] | null
 }
 type DateState = {
   year: number,
@@ -19,49 +24,62 @@ interface CardListState {
     error: null | string,
     lastID: number
 }
-function getDummyCardList():CardState[] {
-  const ret = new Array(300).fill(0);
-  const now = Date.now();
-  return ret.map((v,i) => ({
-    id: 300-i,
-    text: `${i} sdfjkwjgiajigjidjsigfjwijgia`,
-    date: new Date(now - 3600000*6*i).toString(),
-  }));
-}
-const data = getDummyCardList();
-let offset = 0;
-function getPageData() {
-  let ret = data.slice(offset,offset+10);
-  offset += 10;
-  return ret.reverse();
-}
+// function getDummyCardList():CardState[] {
+//   const ret = new Array(300).fill(0);
+//   const now = Date.now();
+//   return ret.map((v,i) => ({
+//     id: 300-i,
+//     text: `${i} sdfjkwjgiajigjidjsigfjwijgia`,
+//     createdAt: new Date(now - 3600000*6*i).toString(),
+//     images: null
+//   }));
+// }
+// const data = getDummyCardList();
+// let offset = 0;
+// function getPageData() {
+//   let ret = data.slice(offset,offset+10);
+//   offset += 10;
+//   return ret.reverse();
+// }
 
-
+export const loadInitialData = createAsyncThunk(
+  'cardlist/loadInitialData',
+  async (_,{getState, dispatch}) => {
+    const response = await axios.get(`/cards`);
+    console.log(response.data);
+    dispatch(updateLastID(response.data[response.data.length-1].id))
+    return (response.data as CardState[]).reverse();
+  },
+)
 export const loadPageData = createAsyncThunk(
   'cardlist/loadPageData',
   async (_,{getState, dispatch}) => {
-    // console.log(thunkApi);
-    const data = await getPageData();
-    const { content } = getState() as any;
-    if(content.lastID === 0) {
-      await dispatch(updateLastID(data[data.length-1].id));
-    }
-    return data as CardState[];
+    const { lastID } = (getState() as any).content;
+    const response = await axios.get(`/cards/${lastID}`);
+    dispatch(updateLastID(response.data[0].id))
+    console.log(response.data);
+
+    // await dispatch(updateLastID(data[data.length-1].id));
+    
+    return response.data as CardState[];
   },
 )
 export const deleteCard = createAsyncThunk(
   'cardlist/deleteCard',
-  async (cardId:number, {dispatch}) => {
-    // const response = await axios.delete('');
-    console.log('deleteCard',cardId);
+  async (cardId:number, dispatch) => {
+    const response = await axios.delete(`/cards/${cardId}`);
+    console.log('deleteCard',cardId,response);
     return cardId;
   },
 )
 export const addCard = createAsyncThunk(
   'cardlist/addCard',
-  async (card:CardState) => {
-    // const response = await axios.post('');
-    return card;
+  async (cardText:string) => {
+    const response = await axios.post('/cards',{
+      text: cardText
+    });
+    console.log('addcard res',response);
+    return response.data;
   },
 )
 
@@ -92,6 +110,9 @@ export const cardlistSlice = createSlice({
     }
   },
   extraReducers: builder => {
+    builder.addCase(loadInitialData.fulfilled, (state, action) => {
+      state.cardlist = [ ...action.payload ]
+    })
     builder.addCase(loadPageData.fulfilled, (state, action) => {
       state.cardlist = [...action.payload, ...state.cardlist]
     })

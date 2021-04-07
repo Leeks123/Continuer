@@ -19,8 +19,8 @@ const CardList = ({ data }:CardListProps) => {
     let sideFlag = false
     const dateChangePoint:CardState[] = data.filter((v,i) => {
         if (data[i-1]){
-            const curDate = getDate(Date.parse(v.date));
-            const prevDate = getDate(Date.parse(data[i-1].date))
+            const curDate = getDate(Date.parse(v.createdAt));
+            const prevDate = getDate(Date.parse(data[i-1].createdAt));
             if (curDate === 1 && prevDate !== 1) {
                 return true;
             }
@@ -28,7 +28,7 @@ const CardList = ({ data }:CardListProps) => {
         }
         return false;
     });
-    const dateList = dateChangePoint.map((v) => getDate(Date.parse(v.date)));
+    const dateList = dateChangePoint.map((v) => getDate(Date.parse(v.createdAt)));
 
     const [elRefs, setElRefs] = useState<RefObject<HTMLElement>[]>([]);
     const windowHeight = useWindowHeight();
@@ -82,13 +82,13 @@ const CardList = ({ data }:CardListProps) => {
                                 ref={elRefs[i]} 
                                 text={v.text} 
                                 id={v.id}
-                                date={v.date} 
+                                date={v.createdAt} 
                                 rightSide={sideFlag} 
                             />
                         </>
                     )
                 } else {
-                    return (<Card ref={elRefs[i]} text={v.text} id={v.id} date={v.date} rightSide={sideFlag} />);
+                    return (<Card ref={elRefs[i]} text={v.text} id={v.id} date={v.createdAt} rightSide={sideFlag} />);
                 }
             })}
             

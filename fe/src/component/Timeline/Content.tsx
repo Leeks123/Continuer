@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import styled from 'styled-components';
+import { throttle } from 'lodash';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { loadPageData, prepareLoadData } from '../../redux/reducers/cardListSlice';
+import { loadInitialData ,loadPageData, prepareLoadData } from '../../redux/reducers/cardListSlice';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
@@ -28,10 +29,10 @@ const Wrapper = styled.main`
 `;
 
 const Container = styled.div`
-    padding: 0 1.5rem;
+    padding: 3.25rem 1.5rem 0;
 
     @media (min-width: ${mediaQuery.tablet}px) {
-        padding: 0 2.5rem;
+        padding: 4.25rem 2.5rem 0;
     }
     @media (min-width: ${mediaQuery.laptop}px) {
         max-width: ${mediaQuery.tablet}px;
@@ -46,18 +47,18 @@ const Content = () => {
     const readyToLoad = useAppSelector(state => state.content.scrollState);
     const scroll = useRef<HTMLDivElement>(null);
 
-    const [dataCounter, setDataCounter] = useState<number>(9);
+    const [dataCounter, setDataCounter] = useState<number>(0);
     const [scrollHeight, setScrollHeight] = useState<number>(0);
 
     useEffect(() => { // 초기 렌더링,, 초기 데이터 로드
-        dispatch(loadPageData());
+        dispatch(loadInitialData());
         console.log('first render fin');
     }, []);
 
     useLayoutEffect(() => { // 새로운 카드를 생성했을 떄 스크롤 액션
         if(dataCounter + 1 === data.length) { // 추가 되었을 때 바닥으로 스크롤
             setDataCounter(data.length);
-            scroll.current?.scroll({top:scroll.current?.scrollHeight,left:0, behavior:'smooth'});
+            scroll.current?.scroll({ top:scroll.current?.scrollHeight,left:0, behavior:'smooth' });
             if(scroll.current?.scrollHeight) {
                 setScrollHeight(scroll.current?.scrollHeight);
             }
@@ -95,13 +96,14 @@ const Content = () => {
         }
     }, [readyToLoad]);
 
-    function handleScroll() {
-      console.log(scroll.current?.scrollTop);
-      if (scroll.current?.scrollTop && scroll.current?.scrollTop < 100) { // 첫 렌더 이후 스크롤 감지
-          console.log('need to load data');
-          dispatch(prepareLoadData(true));
-      }
-    }
+    const handleScroll = throttle(() => {
+        console.log(scroll.current?.scrollTop);
+        if (scroll.current?.scrollTop !== undefined && scroll.current?.scrollTop < 100) { // 첫 렌더 이후 스크롤 감지
+            console.log('need to load data');
+            dispatch(prepareLoadData(true));
+        }
+    },500);
+
     useEffect(() => {
       function watchScroll() {
         scroll.current?.addEventListener("scroll", handleScroll);
@@ -112,7 +114,6 @@ const Content = () => {
       };
     }, []);
 
-    console.log('content')
     return (
         <Wrapper ref={scroll}>
             <Container>

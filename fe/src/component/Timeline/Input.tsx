@@ -122,11 +122,7 @@ const Input = () => {
     const onSubmit = () => {
         const date = new Date();
         console.log(format(date,'Y LLLL d HH mm ss'));
-        dispatch(addCard({
-            id: lastID+1,
-            text: typedText,
-            date: date.toString()
-        }));
+        dispatch(addCard(typedText));
         setText('');
         activeToggle();
     }

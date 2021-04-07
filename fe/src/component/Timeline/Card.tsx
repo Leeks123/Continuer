@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useSwipeable } from 'react-swipeable';
 import { BiX } from 'react-icons/bi';
 import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
@@ -11,6 +12,7 @@ import ImageBox from './ImageBox';
 
 import { deleteCard, prepareLoadData } from '../../redux/reducers/cardListSlice';
 import { useAppDispatch } from '../../hooks/redux';
+
 
 type styleProps = {
     right?: boolean,
@@ -88,6 +90,7 @@ const Leaf = styled.div<styleProps>`
     & > div {
         position: relative;
         background: ${palette[0]};
+        border: 2px solid ${palette[0]};
         padding: 1rem;
         ${(props) => props.swipe && `
             left: -3rem;
