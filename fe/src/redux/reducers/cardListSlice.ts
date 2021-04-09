@@ -1,8 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios';
-import { RootState, AppDispatch } from '../store/configureStore';
-import { getMonth } from 'date-fns';
-import Content from '../../component/Timeline/Content';
 
 axios.defaults.baseURL = 'http://localhost:3000';
 axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useSwipeable } from 'react-swipeable';
 import { BiX } from 'react-icons/bi';
 import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
