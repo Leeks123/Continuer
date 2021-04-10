@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import palette from '../utils/palette';
 import mediaQuery from '../utils/mediaQuery';
 import Login from '../component/Landing/Login';
+import { useAppSelector } from '../hooks/redux';
 
 const Wrapper = styled.div`
     overflow: scroll;
@@ -69,7 +70,15 @@ const Line = styled.div`
     left: 50%;
 `;
 
-const LandingPage = () => {
+const LandingPage = (props: { history: string[]; }) => {
+    const isAuth = useAppSelector((state) => state.user.isAuth);
+    const isLoggedIn = useAppSelector(state => state.user.isLoggedIn);
+
+    useLayoutEffect(() => {
+        if(isAuth && isLoggedIn) {
+            props.history.push('/timeline');
+        }
+    }, [isAuth, isLoggedIn])
 
     return (
         <Wrapper>

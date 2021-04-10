@@ -121,7 +121,7 @@ const Input = () => {
 
     const onSubmit = () => {
         const date = new Date();
-        console.log(format(date,'Y LLLL d HH mm ss'));
+        // console.log(format(date,'Y LLLL d HH mm ss'));
         dispatch(addCard(typedText));
         setText('');
         activeToggle();

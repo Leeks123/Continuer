@@ -5,7 +5,9 @@ import { store } from './redux/store/configureStore';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { initFB } from './firebase';
 
+initFB();
 ReactDOM.render(
   <Provider store={store}>
     <App />

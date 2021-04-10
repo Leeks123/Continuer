@@ -5,6 +5,8 @@
 /fe/.pnp
 .pnp.js
 
+/fe/.env
+/fe/src/config.ts
 # testing
 /coverage
 

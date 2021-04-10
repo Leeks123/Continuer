@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CardsModule } from './cards/cards.module';
+import { UsersController } from './users/users.controller';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -11,14 +13,15 @@ import { CardsModule } from './cards/cards.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '****',
+      password: 'macpre13',
       database: 'continuer',
       autoLoadEntities: true,
       synchronize: true,
     }),
     CardsModule,
+    UsersModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, UsersController],
   providers: [AppService],
 })
 export class AppModule {}

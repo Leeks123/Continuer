@@ -1,14 +1,12 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:3000';
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+import { fbLoadInitialData, fbLoadPageData, fbDeleteCard, fbAddCard } from '../../firebase';
 
 export interface CardState {
   id: number,
   text: string,
   createdAt: string,
-  images: string[] | null
+  images?: string[] | null
 }
 type DateState = {
   year: number,
@@ -42,41 +40,34 @@ interface CardListState {
 export const loadInitialData = createAsyncThunk(
   'cardlist/loadInitialData',
   async (_,{getState, dispatch}) => {
-    const response = await axios.get(`/cards`);
-    console.log(response.data);
-    dispatch(updateLastID(response.data[response.data.length-1].id))
-    return (response.data as CardState[]).reverse();
+    const response = await fbLoadInitialData();
+    console.log('loadInitialData',response);
+    await dispatch(updateLastID(response[0].id))
+    return response;
   },
 )
 export const loadPageData = createAsyncThunk(
   'cardlist/loadPageData',
   async (_,{getState, dispatch}) => {
     const { lastID } = (getState() as any).content;
-    const response = await axios.get(`/cards/${lastID}`);
-    dispatch(updateLastID(response.data[0].id))
-    console.log(response.data);
-
-    // await dispatch(updateLastID(data[data.length-1].id));
+    const response = await fbLoadPageData(lastID);
+    await dispatch(updateLastID(response[0].id));
     
-    return response.data as CardState[];
+    return response;
   },
 )
 export const deleteCard = createAsyncThunk(
   'cardlist/deleteCard',
   async (cardId:number, dispatch) => {
-    const response = await axios.delete(`/cards/${cardId}`);
-    console.log('deleteCard',cardId,response);
+    await fbDeleteCard(cardId);
     return cardId;
   },
 )
 export const addCard = createAsyncThunk(
   'cardlist/addCard',
   async (cardText:string) => {
-    const response = await axios.post('/cards',{
-      text: cardText
-    });
-    console.log('addcard res',response);
-    return response.data;
+    const response = await fbAddCard(cardText);
+    return response;
   },
 )
 

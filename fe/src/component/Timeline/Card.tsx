@@ -9,7 +9,7 @@ import mediaQuery from '../../utils/mediaQuery';
 import { useWindowWidth } from '../../hooks/layout';
 import ImageBox from './ImageBox';
 
-import { deleteCard, prepareLoadData } from '../../redux/reducers/cardListSlice';
+import { deleteCard } from '../../redux/reducers/cardListSlice';
 import { useAppDispatch } from '../../hooks/redux';
 
 
@@ -202,7 +202,6 @@ const Card = React.forwardRef<HTMLElement, CardProps>(({ id,text, date, rightSid
         },
         ...config,
     });
-
     return (
         <div>
         {rightSide && windowWidth >= mediaQuery.tablet ?
