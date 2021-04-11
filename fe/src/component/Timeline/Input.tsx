@@ -1,11 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { BiUpArrowAlt, BiCamera } from 'react-icons/bi';
 
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useAppDispatch } from '../../hooks/redux';
 import { addCard } from '../../redux/reducers/cardListSlice';
 
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
@@ -94,7 +95,6 @@ const ToastInput = styled.div`
 
 const Input = () => {
     const dispatch = useAppDispatch();
-    const lastID = useAppSelector(state => state.content.lastID);
     const [isActive,setActive] = useState<boolean>(false);
     const [typedText, setText] = useState<string>('');
     const textArea = useRef<HTMLTextAreaElement>(null);
@@ -120,7 +120,7 @@ const Input = () => {
     };
 
     const onSubmit = () => {
-        const date = new Date();
+        // const date = new Date();
         // console.log(format(date,'Y LLLL d HH mm ss'));
         dispatch(addCard(typedText));
         setText('');

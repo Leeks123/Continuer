@@ -1,13 +1,9 @@
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 
-import firebase from "firebase/app";
-import "firebase/auth";
-
 import { useAppDispatch } from '../../hooks/redux';
-import { auth, logIn } from '../../redux/reducers/userSlice';
+import { logIn } from '../../redux/reducers/userSlice';
 
-const Login = (props: RouteComponentProps) => {
+const Login = () => {
   const dispatch = useAppDispatch();
   
   const onClick = async () => {
@@ -26,4 +22,4 @@ const Login = (props: RouteComponentProps) => {
     );
 };
 
-export default withRouter(Login);
+export default Login;

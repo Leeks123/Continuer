@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fbAuthentication, fbLogIn } from '../../firebase';
 
 export const auth = createAsyncThunk(
@@ -46,7 +46,5 @@ export const userSlice = createSlice({
   
   
 })
-
-export const {  } = userSlice.actions
 
 export default userSlice.reducer

@@ -3,6 +3,7 @@ import firebase from 'firebase/app';
 import "firebase/analytics";
 import "firebase/storage";
 import "firebase/firestore";
+import "firebase/auth";
 
 import { firebaseConfig } from './config';
 
@@ -62,40 +63,39 @@ export async function fbLogout() {
 export async function fbLoadInitialData() {
     const cardCollection = db.collection('users').doc(auth.currentUser.uid).collection('cards');
     const cards = await cardCollection
-        .orderBy('createdAt','asc')
+        .orderBy('createdAt','desc')
         .limit(10)
         .get();
     const ret = [];
     for(const doc of cards.docs){
         console.log(doc.id, '=>', doc.data());
-        const { id, text, createdAt } = doc.data();
+        let { id, text, createdAt } = doc.data();
         const obj = {
-            id: id, text: text, createdAt: createdAt.toDate().toString()
-        }
+            id: id, text: text, createdAt: createdAt !== 0 ? createdAt.toDate().toString() : '0'
+        };
         ret.push(obj);
-        console.log(id,text,createdAt,ret)
     }
-    console.log('fbloadInit',ret)
-    return ret;
+    return ret.reverse();
 }
 export async function fbLoadPageData(lastId:number) {
     const cardCollection = db.collection('users').doc(auth.currentUser.uid).collection('cards');
     const cards = await cardCollection
-        .orderBy('createdAt','desc')
-        .startAfter('numId',lastId)
+        .orderBy('id','desc')
+        .startAfter(lastId)
         .limit(10)
         .get();
     const ret = [];
+    console.log('loadpage',cards);
     for(const doc of cards.docs){
         console.log(doc.id, '=>', doc.data());
         const { id, text, createdAt } = doc.data();
         ret.push({
             id,
             text,
-            createdAt: createdAt.toDate().toString()
+            createdAt: createdAt !== 0 ? createdAt.toDate().toString() : '0'
         });
     }
-    return ret;
+    return ret.reverse();
 }
 export async function fbDeleteCard(cardId:number) {
     const data = await  db.collection('users').doc(auth.currentUser.uid).collection('cards')

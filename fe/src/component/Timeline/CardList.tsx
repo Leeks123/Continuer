@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, createRef, RefObject } from 'react';
 import { getDate, getMonth, getYear } from 'date-fns';
 
@@ -8,9 +9,9 @@ import { useWindowHeight } from '../../hooks/layout';
 import { useAppDispatch } from '../../hooks/redux';
 import { changeDate } from '../../redux/reducers/cardListSlice';
 
-import img01 from '../../utils/images/img01.jpg';
-import img02 from '../../utils/images/img02.jpg';
-import img03 from '../../utils/images/img03.png';
+// import img01 from '../../utils/images/img01.jpg';
+// import img02 from '../../utils/images/img02.jpg';
+// import img03 from '../../utils/images/img03.png';
 
 type CardListProps = {
     data: CardState[]
