@@ -56,7 +56,7 @@ const Content = () => {
         console.log('first render fin');
     }, []);
 
-    useLayoutEffect(() => { // 새로운 카드를 생성했을 떄 스크롤 액션
+    useEffect(() => { // 새로운 카드를 생성했을 떄 스크롤 액션
         if(dataCounter + 1 === data.length) { // 추가 되었을 때 바닥으로 스크롤
             setDataCounter(data.length);
             scroll.current?.scroll({ top:scroll.current?.scrollHeight,left:0, behavior:'smooth' });
@@ -64,7 +64,7 @@ const Content = () => {
                 setScrollHeight(scroll.current?.scrollHeight);
             }
         }
-        if(dataCounter + 10 === data.length ) { // 인피니티 스크롤로 로드 완료 후 스크롤 포지션 유지
+        else if(dataCounter + 10 === data.length ) { // 인피니티 스크롤로 로드 완료 후 스크롤 포지션 유지
             setDataCounter(data.length);
             scroll.current?.scroll({
                 top:scroll.current?.scrollHeight - scrollHeight,
@@ -75,11 +75,20 @@ const Content = () => {
             }
             dispatch(prepareLoadData(false));
         }
-        if(dataCounter -1 === data.length ) { // 카드 삭제시 스크롤 유지
+        else if(dataCounter -1 === data.length ) { // 카드 삭제시 스크롤 유지
             setDataCounter(data.length);
             console.log('card delete',`scroll to ${scroll.current?.scrollTop}` )
             scroll.current?.scroll({
                 top:scroll.current?.scrollTop,
+                left:0
+            });
+            if(scroll.current?.scrollHeight) {
+                setScrollHeight(scroll.current?.scrollHeight);
+            }
+            dispatch(prepareLoadData(false));
+        } else {
+            scroll.current?.scroll({
+                top:150,
                 left:0
             });
             if(scroll.current?.scrollHeight) {

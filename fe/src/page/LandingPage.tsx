@@ -5,7 +5,7 @@ import styled, { keyframes } from 'styled-components';
 import palette from '../utils/palette';
 import mediaQuery from '../utils/mediaQuery';
 import Login from '../component/Landing/Login';
-import { useAppSelector } from '../hooks/redux';
+import firebase from 'firebase';
 
 const Wrapper = styled.div`
     overflow: scroll;
@@ -72,14 +72,14 @@ const Line = styled.div`
 `;
 
 const LandingPage = (props: { history: string[]; }) => {
-    const isAuth = useAppSelector((state) => state.user.isAuth);
-    const isLoggedIn = useAppSelector(state => state.user.isLoggedIn);
 
     useLayoutEffect(() => {
-        if(isAuth && isLoggedIn) {
-            props.history.push('/timeline');
-        }
-    }, [isAuth, isLoggedIn])
+        firebase.auth().onAuthStateChanged((user: any) => {
+            if (user) {
+                props.history.push('/timeline');
+            } 
+          });
+    }, [])
 
     return (
         <Wrapper>

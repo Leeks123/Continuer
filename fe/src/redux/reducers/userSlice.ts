@@ -11,6 +11,7 @@ export const auth = createAsyncThunk(
 export const logIn = createAsyncThunk(
   'user/logIn',
   async(_,{getState, dispatch}) => {
+    console.log('login...')
     const response = await fbLogIn();
     dispatch(auth());
     return response;

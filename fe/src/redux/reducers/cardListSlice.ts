@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 
-import { fbLoadInitialData, fbLoadPageData, fbDeleteCard, fbAddCard } from '../../firebase';
+import { fbLoadInitialData, fbLoadPageData, fbDeleteCard, fbAddCard, fbLoadDataByDate } from '../../firebase';
 
 export interface CardState {
   id: number,
@@ -56,6 +56,16 @@ export const loadPageData = createAsyncThunk(
     return response;
   },
 )
+export const loadDataByDate = createAsyncThunk(
+  'cardlist/loadDataByDate',
+  async (date:string,{getState, dispatch}) => {
+    const response = await fbLoadDataByDate(date);
+    await dispatch(updateLastID(response[0].id));
+    console.log(response);
+    
+    return response;
+  },
+)
 export const deleteCard = createAsyncThunk(
   'cardlist/deleteCard',
   async (cardId:number, dispatch) => {
@@ -103,6 +113,12 @@ export const cardlistSlice = createSlice({
     })
     builder.addCase(loadPageData.fulfilled, (state, action) => {
       state.cardlist = [...action.payload, ...state.cardlist]
+    })
+    builder.addCase(loadPageData.rejected, (state, action) => {
+      state.scrollState = false
+    })
+    builder.addCase(loadDataByDate.fulfilled, (state, action) => {
+      state.cardlist = [...action.payload]
     })
     builder.addCase(deleteCard.fulfilled, (state, action) => {
       state.cardlist = state.cardlist.filter((list) => list.id !== action.payload)

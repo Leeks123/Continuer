@@ -29,6 +29,7 @@ export async function fbAuthentication():Promise<boolean> {
 
 export async function fbLogIn() {
     const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     const result = await firebase.auth().signInWithPopup(googleAuthProvider);
     console.log('fbLogin',result);
     if(result.operationType === 'signIn') {
@@ -96,6 +97,25 @@ export async function fbLoadPageData(lastId:number) {
         });
     }
     return ret.reverse();
+}
+export async function fbLoadDataByDate(date:string) {
+    const cardCollection = db.collection('users').doc(auth.currentUser.uid).collection('cards');
+    const cards = await cardCollection
+        .where('createdAt','>=',new Date(date))
+        .orderBy('createdAt')
+        .get();
+    const ret = [];
+    console.log('loadDate',cards);
+    for(const doc of cards.docs){
+        console.log(doc.id, '=>', doc.data());
+        const { id, text, createdAt } = doc.data();
+        ret.push({
+            id,
+            text,
+            createdAt: createdAt !== 0 ? createdAt.toDate().toString() : '0'
+        });
+    }
+    return ret;
 }
 export async function fbDeleteCard(cardId:number) {
     const data = await  db.collection('users').doc(auth.currentUser.uid).collection('cards')

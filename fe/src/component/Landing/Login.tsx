@@ -6,7 +6,7 @@ import { logIn } from '../../redux/reducers/userSlice';
 const Login = () => {
   const dispatch = useAppDispatch();
   
-  const onClick = async () => {
+  const onClick = () => {
     console.log('button clicked');
     dispatch(logIn());
   }

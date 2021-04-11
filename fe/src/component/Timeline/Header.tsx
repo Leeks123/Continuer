@@ -4,6 +4,7 @@ import { BiChevronDown } from 'react-icons/bi'
 
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
+import { sub } from 'date-fns';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 
@@ -120,14 +121,13 @@ const Header = () => {
         setDate(listDate);
     }, [listDate]);
 
-    const onDayClick = (day: any, { selected }: any) => {
+    const onDayClick = (day: Date, { selected }: any) => {
         setSelectedDay(selected ? undefined : day)
     }
     const onBtnClick = () => {
         pickerToggle(false);
-        console.log(selectedDay.toString())
         if(selectedDay) {
-            dispatch(loadDataByDate(selectedDay.toString()));
+            dispatch(loadDataByDate(sub(selectedDay,{days:1}).toString()));
         }
     }
     return (
