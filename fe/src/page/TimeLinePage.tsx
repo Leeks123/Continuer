@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Header from '../component/Timeline/Header';
 import Content from '../component/Timeline/Content';
-import Input from '../component/Timeline/Input';
+import Input from '../component/Timeline/Input/index';
 
 const Wrapper = styled.div`
     width: 100vw;

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { throttle } from 'lodash';
 
@@ -48,7 +48,7 @@ const Content = () => {
     const readyToLoad = useAppSelector(state => state.content.scrollState);
     const scroll = useRef<HTMLDivElement>(null);
 
-    const [dataCounter, setDataCounter] = useState<number>(0);
+    const [dataCounter, setDataCounter] = useState<number>(9);
     const [scrollHeight, setScrollHeight] = useState<number>(0);
 
     useEffect(() => { // 초기 렌더링,, 초기 데이터 로드
@@ -66,12 +66,13 @@ const Content = () => {
         }
         else if(dataCounter + 10 === data.length ) { // 인피니티 스크롤로 로드 완료 후 스크롤 포지션 유지
             setDataCounter(data.length);
+            console.log(scroll.current?.scrollHeight,scroll.current?.scrollTop,scrollHeight);
             scroll.current?.scroll({
                 top:scroll.current?.scrollHeight - scrollHeight,
                 left:0
             });
             if(scroll.current?.scrollHeight) {
-                setScrollHeight(scroll.current?.scrollHeight);
+                setScrollHeight(scroll.current?.scrollTop);
             }
             dispatch(prepareLoadData(false));
         }
@@ -79,8 +80,8 @@ const Content = () => {
             setDataCounter(data.length);
             console.log('card delete',`scroll to ${scroll.current?.scrollTop}` )
             scroll.current?.scroll({
-                top:scroll.current?.scrollTop,
-                left:0
+                top: scroll.current?.scrollTop,
+                left: 0
             });
             if(scroll.current?.scrollHeight) {
                 setScrollHeight(scroll.current?.scrollHeight);
@@ -88,7 +89,7 @@ const Content = () => {
             dispatch(prepareLoadData(false));
         } else {
             scroll.current?.scroll({
-                top:150,
+                top:scroll.current.scrollHeight,
                 left:0
             });
             if(scroll.current?.scrollHeight) {
@@ -110,6 +111,7 @@ const Content = () => {
         console.log(scroll.current?.scrollTop);
         if (scroll.current?.scrollTop !== undefined && scroll.current?.scrollTop < 100) { // 첫 렌더 이후 스크롤 감지
             console.log('need to load data');
+            setScrollHeight(scroll.current.scrollHeight);
             dispatch(prepareLoadData(true));
         }
     },500);
@@ -124,6 +126,7 @@ const Content = () => {
       };
     }, []);
 
+    console.log(scroll.current?.scrollHeight, scroll.current?.scrollTop);
     return (
         <Wrapper ref={scroll}>
             <Container>

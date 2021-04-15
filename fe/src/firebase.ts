@@ -9,12 +9,23 @@ import { firebaseConfig } from './config';
 
 // setting
 export let db:any;
+export let storage:any;
+export let storageRef:any;
 let auth:any;
 export const initFB = () => {
     console.log('initFB');
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
+    storage = firebase.storage();
+    storageRef = storage.ref();
     auth = firebase.auth();
+}
+
+// storage
+export async function fbFileUpload(file: { name: string; }):Promise<string> {
+    let uploadTask = await storageRef.child(`${auth.currentUser.uid}/${file.name}`).put(file);
+    const url = await uploadTask.ref.getDownloadURL();
+    return url as string;
 }
 
 // auth
@@ -69,10 +80,13 @@ export async function fbLoadInitialData() {
         .get();
     const ret = [];
     for(const doc of cards.docs){
-        console.log(doc.id, '=>', doc.data());
-        let { id, text, createdAt } = doc.data();
+        // console.log(doc.id, '=>', doc.data());
+        let { id, text, createdAt, images } = doc.data();
         const obj = {
-            id: id, text: text, createdAt: createdAt !== 0 ? createdAt.toDate().toString() : '0'
+            id: id, 
+            text: text, 
+            createdAt: createdAt !== 0 ? createdAt.toDate().toString() : '0', 
+            images
         };
         ret.push(obj);
     }
@@ -88,12 +102,13 @@ export async function fbLoadPageData(lastId:number) {
     const ret = [];
     console.log('loadpage',cards);
     for(const doc of cards.docs){
-        console.log(doc.id, '=>', doc.data());
-        const { id, text, createdAt } = doc.data();
+        // console.log(doc.id, '=>', doc.data());
+        const { id, text, createdAt,images } = doc.data();
         ret.push({
             id,
             text,
-            createdAt: createdAt !== 0 ? createdAt.toDate().toString() : '0'
+            createdAt: createdAt !== 0 ? createdAt.toDate().toString() : '0',
+            images
         });
     }
     return ret.reverse();
@@ -108,11 +123,12 @@ export async function fbLoadDataByDate(date:string) {
     console.log('loadDate',cards);
     for(const doc of cards.docs){
         console.log(doc.id, '=>', doc.data());
-        const { id, text, createdAt } = doc.data();
+        const { id, text, createdAt,images } = doc.data();
         ret.push({
             id,
             text,
-            createdAt: createdAt !== 0 ? createdAt.toDate().toString() : '0'
+            createdAt: createdAt !== 0 ? createdAt.toDate().toString() : '0',
+            images
         });
     }
     return ret;
@@ -126,7 +142,9 @@ export async function fbDeleteCard(cardId:number) {
         doc.ref.delete();
     });
 }
-export async function fbAddCard(cardText:string) {
+export async function fbAddCard(cardData:{
+    text: string, imgUrls: string[] | null
+  }) {
     const cardCollection = db.collection('users').doc(auth.currentUser.uid).collection('cards');
     const cards = await cardCollection
         .orderBy('id','desc')
@@ -138,10 +156,11 @@ export async function fbAddCard(cardText:string) {
     const createdTime = firebase.firestore.Timestamp.now();
     const data = {
         createdAt: createdTime,
-        text: cardText,
+        text: cardData.text,
         id: (lastCard.id as number)+1,
-        image: null
+        images: cardData.imgUrls
     }
+    console.log('fb AddCard', data);
     newCard.set(data);
     return {
         ...data,

@@ -172,7 +172,7 @@ type CardProps = {
     text: string,
     date: string,
     rightSide?: boolean,
-    images?: string[],
+    images?: string[] | null
 }
 const Card = React.forwardRef<HTMLElement, CardProps>(({ id,text, date, rightSide, images }, ref) => {
     const windowWidth = useWindowWidth();

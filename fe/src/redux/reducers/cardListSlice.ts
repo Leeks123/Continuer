@@ -75,8 +75,12 @@ export const deleteCard = createAsyncThunk(
 )
 export const addCard = createAsyncThunk(
   'cardlist/addCard',
-  async (cardText:string) => {
-    const response = await fbAddCard(cardText);
+  async (cardData:{
+    text: string, imgUrls: string[] | null
+  }) => {
+    console.log('redux before fb',cardData)
+    const response = await fbAddCard(cardData);
+    console.log('redux addCard',response);
     return response;
   },
 )

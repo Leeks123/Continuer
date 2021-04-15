@@ -83,12 +83,13 @@ const CardList = ({ data }:CardListProps) => {
                                 text={v.text} 
                                 id={v.id}
                                 date={v.createdAt} 
-                                rightSide={sideFlag} 
+                                rightSide={sideFlag}
+                                images={v.images} 
                             />
                         </div>
                     )
                 } else {
-                    return (<Card key={v.id} ref={elRefs[i]} text={v.text} id={v.id} date={v.createdAt} rightSide={sideFlag} />);
+                    return (<Card key={v.id} ref={elRefs[i]} text={v.text} id={v.id} date={v.createdAt} rightSide={sideFlag} images={v.images} />);
                 }
             })}
             
