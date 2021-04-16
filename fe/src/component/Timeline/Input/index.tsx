@@ -45,8 +45,6 @@ const Input = () => {
     };
     const onUploadFilePreview = (e:React.ChangeEvent<HTMLInputElement>) => {
         const files = fileuploader.current?.files as FileList;
-        // console.log(files);
-        // console.log(files[0].name);
 
         for(let i=0;i<files.length;i++) {
             const reader = new FileReader();
@@ -59,8 +57,8 @@ const Input = () => {
             };
             reader.readAsDataURL(files[i]);
           };
-        setUploadImgs(files);
 
+        setUploadImgs(files);
     };
     async function getImgUrls() {
         let imgUrls:string[] = [];

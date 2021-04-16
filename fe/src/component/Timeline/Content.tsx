@@ -48,7 +48,7 @@ const Content = () => {
     const readyToLoad = useAppSelector(state => state.content.scrollState);
     const scroll = useRef<HTMLDivElement>(null);
 
-    const [dataCounter, setDataCounter] = useState<number>(9);
+    const [dataCounter, setDataCounter] = useState<number>(0);
     const [scrollHeight, setScrollHeight] = useState<number>(0);
 
     useEffect(() => { // 초기 렌더링,, 초기 데이터 로드
@@ -57,6 +57,8 @@ const Content = () => {
     }, []);
 
     useEffect(() => { // 새로운 카드를 생성했을 떄 스크롤 액션
+        console.log(dataCounter, data.length);
+        console.log(scrollHeight, scroll.current?.scrollHeight, document.documentElement.scrollHeight,window.innerHeight)
         if(dataCounter + 1 === data.length) { // 추가 되었을 때 바닥으로 스크롤
             setDataCounter(data.length);
             scroll.current?.scroll({ top:scroll.current?.scrollHeight,left:0, behavior:'smooth' });
@@ -64,7 +66,7 @@ const Content = () => {
                 setScrollHeight(scroll.current?.scrollHeight);
             }
         }
-        else if(dataCounter + 10 === data.length ) { // 인피니티 스크롤로 로드 완료 후 스크롤 포지션 유지
+        else if(dataCounter + 10 === data.length || dataCounter -1 === data.length ) { // 인피니티 스크롤로 로드 완료 후 스크롤 포지션 유지 || 카드 삭제시
             setDataCounter(data.length);
             console.log(scroll.current?.scrollHeight,scroll.current?.scrollTop,scrollHeight);
             scroll.current?.scroll({
@@ -73,27 +75,6 @@ const Content = () => {
             });
             if(scroll.current?.scrollHeight) {
                 setScrollHeight(scroll.current?.scrollTop);
-            }
-            dispatch(prepareLoadData(false));
-        }
-        else if(dataCounter -1 === data.length ) { // 카드 삭제시 스크롤 유지
-            setDataCounter(data.length);
-            console.log('card delete',`scroll to ${scroll.current?.scrollTop}` )
-            scroll.current?.scroll({
-                top: scroll.current?.scrollTop,
-                left: 0
-            });
-            if(scroll.current?.scrollHeight) {
-                setScrollHeight(scroll.current?.scrollHeight);
-            }
-            dispatch(prepareLoadData(false));
-        } else {
-            scroll.current?.scroll({
-                top:scroll.current.scrollHeight,
-                left:0
-            });
-            if(scroll.current?.scrollHeight) {
-                setScrollHeight(scroll.current?.scrollHeight);
             }
             dispatch(prepareLoadData(false));
         }
@@ -109,7 +90,7 @@ const Content = () => {
 
     const handleScroll = throttle(() => {
         console.log(scroll.current?.scrollTop);
-        if (scroll.current?.scrollTop !== undefined && scroll.current?.scrollTop < 100) { // 첫 렌더 이후 스크롤 감지
+        if (scroll.current?.scrollTop !== undefined  &&  scroll.current?.scrollTop < 100) { // 첫 렌더 이후 스크롤 감지
             console.log('need to load data');
             setScrollHeight(scroll.current.scrollHeight);
             dispatch(prepareLoadData(true));
@@ -126,7 +107,7 @@ const Content = () => {
       };
     }, []);
 
-    console.log(scroll.current?.scrollHeight, scroll.current?.scrollTop);
+    console.log('content render');
     return (
         <Wrapper ref={scroll}>
             <Container>

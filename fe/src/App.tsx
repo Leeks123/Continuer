@@ -1,4 +1,5 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
+
 import LandingPage from './page/LandingPage';
 import TimeLinePage from './page/TimeLinePage';
 
@@ -8,11 +9,11 @@ function App() {
   
   return (
     <BrowserRouter>
-    <Switch>
-      <Route path="/" exact component={Auth(LandingPage,null)} />
-      <Route path="/timeline" component={Auth(TimeLinePage,true)} />
-    </Switch>
-  </BrowserRouter>
+      <Switch>
+        <Route path="/" exact component={Auth(LandingPage,null)} />
+        <Route path="/timeline" component={Auth(TimeLinePage,true)} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 

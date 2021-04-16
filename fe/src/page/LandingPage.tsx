@@ -70,6 +70,11 @@ const Line = styled.div`
     position: absolute;
     left: 50%;
 `;
+const Desc = styled.div`
+    font-size: .9rem;
+    padding: 2rem 0.5rem;
+    text-align: left;
+`;
 
 const LandingPage = (props: { history: string[]; }) => {
 
@@ -93,9 +98,24 @@ const LandingPage = (props: { history: string[]; }) => {
                 <Line />
             </Section>
             <Section>
-                page2
+                <Box>
+                    <Desc>
+                        <b>Continuer</b>는 타임라인형 저널입니다. <br/><br/>
+                        당신의 순간을 기록하세요 🗒
+                    </Desc>
+                </Box>
             </Section>
-            <Section>page3</Section>
+            <Section>
+                <Box>
+                    <Desc>
+                        개발자 본인이 쓰려고 만든 애플리케이션입니다. <br/><br/>
+                        그렇지만 누군가 이 앱이 필요하여 이 페이지에 들어오셨다면 자유롭게 사용하셔도 좋습니다.<br/><br/>
+                        버그가 발견되면 지속적으로 업데이트하고, 기능도 추가할 예정입니다. 문의 사항이 있다면 email로 연락을 주시기 바랍니다.<br/><br/><br/>
+                        <strong>Version</strong> : 1.0.0<br/>
+                        <strong>Contact</strong> : kensei719@naver.com
+                    </Desc>
+                </Box>
+            </Section>
         </Wrapper>
     );
 };

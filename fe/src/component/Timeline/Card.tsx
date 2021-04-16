@@ -217,7 +217,7 @@ const Card = React.forwardRef<HTMLElement, CardProps>(({ id,text, date, rightSid
                     <Leaf right={rightSide} swipe={isSwiped}>
                         <div>
                             {images && <ImageBox images={images} />}
-                            {text.split('\n').map((line,i) => (<p key={line[0]+i}>{line}</p>))}
+                            {text.split('\n').map((line,i) => (<p key={i}>{line}</p>))}
                         </div>
                         <span><BiX onClick={onDelete} style={{ fontSize: '2rem' }}/></span>
                     </Leaf>
@@ -228,7 +228,7 @@ const Card = React.forwardRef<HTMLElement, CardProps>(({ id,text, date, rightSid
                     <Leaf swipe={isSwiped}>
                         <div>
                             {images && <ImageBox images={images} />}
-                            {text.split('\n').map((line,i) => (<p key={line[0]+i}>{line}</p>))}
+                            {text.split('\n').map((line,i) => (<p key={new Date().toString()+i}>{line}</p>))}
                         </div>
                         <span><BiX onClick={onDelete} style={{ fontSize: '2rem' }}/></span>
                     </Leaf>

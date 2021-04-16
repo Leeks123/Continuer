@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
+
 import mediaQuery from '../../utils/mediaQuery';
 
 import Modal from 'react-modal';
@@ -14,11 +15,6 @@ const Wrapper = styled.div`
     @media (min-width: ${mediaQuery.mobile}px) {
         height: 250px;
     }
-    // @media (min-width: ${mediaQuery.tablet}px) {
-    //     padding-bottom: 4.5rem;
-    // }
-    // @media (min-width: ${mediaQuery.laptop}px) {
-}
 `;
 type PanelProps = {
     image: number,
@@ -48,13 +44,13 @@ const Panel = styled.div<PanelProps>`
     `}
 `;
 
-
 type ImageBoxProps = {
     images: string[],
 }
 const ImageBox = ({ images }:ImageBoxProps) => {
     const [activeImg, setActiveImg] = useState<number>(0);
     const [isOpenImageZoom, setOpenImageZoom] = useState<boolean>(false);
+    const [isClicked, setIsClicked] = useState<boolean>(false);
 
     const openImageZoom = useCallback(() => {
         console.log('dbclick')
@@ -64,11 +60,29 @@ const ImageBox = ({ images }:ImageBoxProps) => {
         setOpenImageZoom(false);
     },[]);
 
+    const onClick = (i:number) => {
+        if (!isClicked) {
+            setActiveImg(i);
+            setIsClicked(true);
+            setTimeout(() => {
+                setIsClicked(false);
+            },500)
+        } else {
+            openImageZoom();
+        }
+    }
     return (
         <Wrapper>
             {images.map((img,i) => {
                 const isActive = activeImg === i;
-                return <Panel image={images.length} url={img} active={isActive} onClick={() => setActiveImg(i)} onDoubleClick={() => openImageZoom()}/>
+                return <Panel 
+                            key={img+i} 
+                            image={images.length} 
+                            url={img} 
+                            active={isActive} 
+                            onClick={() => onClick(i)} 
+                            // onDoubleClick={() => openImageZoom()}
+                        />
             })}
             <Modal
                 isOpen={isOpenImageZoom}

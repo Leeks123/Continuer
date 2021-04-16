@@ -61,8 +61,8 @@ const ImageZoom = ({ images, firstImg, onClose }:ImageZoomProps) => {
             <StyledX onClick={onClose} />
             <div style={{ marginTop: '2.5rem' }} />
             <StyledSlider {...settings} ref={sliderRef}>
-                {images.map((image) => (
-                    <Image url={image}/>
+                {images.map((image,i) => (
+                    <Image key={image+i} url={image}/>
                 ))}
             </StyledSlider>
         </Wrapper>
