@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
 import { loadDataByDate } from '../../redux/reducers/cardListSlice';
+import Menu from './Menu';
 
 const Wrapper = styled.header`
     width: 100%;
@@ -31,6 +32,8 @@ const Wrapper = styled.header`
 
 const Container = styled.div`
     padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
 
     @media (min-width: ${mediaQuery.tablet}px) {
         padding: 1rem 2rem;
@@ -145,6 +148,7 @@ const Header = () => {
                     <YearMonth onClick={() => pickerToggle(true)}>
                         <span>{monthWords[date.month]}  <small>{date.year}</small></span>
                     </YearMonth>
+                    <Menu />
                 </Container>
             }
         </Wrapper>

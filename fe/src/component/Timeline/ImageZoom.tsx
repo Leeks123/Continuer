@@ -47,7 +47,7 @@ const ImageZoom = ({ images, firstImg, onClose }:ImageZoomProps) => {
 
     useEffect(() => {
             sliderRef.current?.slickGoTo(firstImg);
-    }, []);
+    }, [firstImg]);
     
     const settings = {
         dots: true,

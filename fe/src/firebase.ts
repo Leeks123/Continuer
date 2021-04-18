@@ -67,8 +67,10 @@ export async function fbLogIn() {
     }
     
 }
-export async function fbLogout() {
-    firebase.auth().signOut();
+export async function fbLogOut() {
+    const result = await firebase.auth().signOut();
+    console.log('fblogout',result);
+    return false;
 }
 
 // firestore
