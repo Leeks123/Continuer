@@ -13,7 +13,7 @@ export let storage:any;
 export let storageRef:any;
 let auth:any;
 export const initFB = () => {
-    console.log('initFB');
+    // console.log('initFB');
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
     storage = firebase.storage();

@@ -41,7 +41,7 @@ export const loadInitialData = createAsyncThunk(
   'cardlist/loadInitialData',
   async (_,{getState, dispatch}) => {
     const response = await fbLoadInitialData();
-    console.log('loadInitialData',response);
+    // console.log('loadInitialData',response);
     await dispatch(updateLastID(response[0].id))
     return response;
   },
@@ -61,7 +61,7 @@ export const loadDataByDate = createAsyncThunk(
   async (date:string,{getState, dispatch}) => {
     const response = await fbLoadDataByDate(date);
     await dispatch(updateLastID(response[0].id));
-    console.log(response);
+    // console.log(response);
     
     return response;
   },
@@ -78,9 +78,7 @@ export const addCard = createAsyncThunk(
   async (cardData:{
     text: string, imgUrls: string[] | null
   }) => {
-    console.log('redux before fb',cardData)
     const response = await fbAddCard(cardData);
-    console.log('redux addCard',response);
     return response;
   },
 )

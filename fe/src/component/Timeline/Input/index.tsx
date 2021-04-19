@@ -48,6 +48,9 @@ const Input = () => {
         const files = fileuploader.current?.files as FileList;
 
         for(let i=0;i<files.length;i++) {
+            if(i === 3){
+                break;
+            }
             const reader = new FileReader();
             reader.onload = e => {
                 const image = new Image();

@@ -35,6 +35,11 @@
     "typescript": "^4.2.3",
     "web-vitals": "^1.1.1"
   },
+  "devDependencies": {
+    "@types/lodash": "^4.14.168",
+    "@types/react-modal": "^3.12.0",
+    "@types/react-slick": "^0.23.4"
+  },
   "scripts": {
     "start": "set PORT=3100 && react-scripts start",
     "build": "react-scripts build",
@@ -58,10 +63,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.14.168",
-    "@types/react-modal": "^3.12.0",
-    "@types/react-slick": "^0.23.4"
   }
 }

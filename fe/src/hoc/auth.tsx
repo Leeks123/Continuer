@@ -20,7 +20,7 @@ export default function<P extends object>( SpecificComponent:React.ComponentType
                         setVisible(true);
                     }
                 } else {
-                    console.log('isAuth')
+                    // console.log('isAuth')
                     setVisible(option === null ? true : option );
                 }
               });

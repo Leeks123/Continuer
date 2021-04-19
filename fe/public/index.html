@@ -18,7 +18,12 @@
     <meta name="mobile-web-app-capable" content="yes">
     <!-- Tell iOS it's a PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <meta http-equiv="Cache-Control" content="max-age: 31536000, no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon-192x192.png" />
+    <meta name="apple-mobile-web-app-title" content="Continuer" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -34,12 +39,60 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Continuer</title>
+    <style>
+      .firstLoading {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .firstLoading ul {
+        padding: 0;
+        margin: 0;
+        display: flex;
+      }
+      .firstLoading li {
+        padding: 0;
+        margin: 0.25rem;
+        display: block;
+        width: .75rem;
+        height: .75rem;
+        border-radius: 50%;
+        background: black;
+      }
+      .firstLoading li:nth-child(1) {
+        animation: wave 0.5s 0s ease-in-out infinite alternate;
+      }
+      .firstLoading li:nth-child(2) {
+        animation: wave 0.5s 0.25s ease-in-out infinite alternate;
+      }
+      .firstLoading li:nth-child(3) {
+        animation: wave 0.5s .5s ease-in-out infinite alternate;
+      }
+
+      @keyframes wave {
+        from {
+          transform: translateY(1rem);
+        }
+        to {
+          transform: translateY(-1rem);
+        }
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-
       <!-- loading page -->
+      <div class="firstLoading">
+        <ul>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
     </div>
 
     <script>

@@ -61,14 +61,14 @@ const SideBar = styled.div<SideBayProps>`
     }
 `
 type ToggleBtnProps = {
-    active: boolean
+    active: string
 }
 const ToggleBtn = styled(BsFillGridFill)<ToggleBtnProps>`
     width: 24px;
     height: 24px;
     margin: 0.25rem;
 
-    ${props => props.active ? `
+    ${props => props.active === 'true' ? `
         transform: rotate(45deg);
     `:
     `
@@ -86,7 +86,6 @@ const SideMenu = () => {
     }, []);
     const onLogoutClick = useCallback(() => {
         const result = window.confirm('로그아웃 하시겠습니까?');
-        console.log(result);
         if(result) {
             dispatch(logOut());
         }
@@ -94,7 +93,7 @@ const SideMenu = () => {
 
     return (
         <div>
-            <ToggleBtn active={isOpen} onClick={sideBarToggle}/>
+            <ToggleBtn active={isOpen.toString()} onClick={sideBarToggle}/>
             <SideBar active={isOpen}>
                 <ul>
                     <li onClick={onLogoutClick}><RiLogoutCircleRLine /><small>Logout</small></li>

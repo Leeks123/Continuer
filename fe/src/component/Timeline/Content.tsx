@@ -53,12 +53,10 @@ const Content = () => {
 
     useEffect(() => { // 초기 렌더링,, 초기 데이터 로드
         dispatch(loadInitialData());
-        console.log('first render fin');
+        // console.log('first render fin');
     }, []);
 
     useEffect(() => { // 새로운 카드를 생성했을 떄 스크롤 액션
-        console.log(dataCounter, data.length);
-        console.log(scrollHeight, scroll.current?.scrollHeight, document.documentElement.scrollHeight,window.innerHeight)
         if(dataCounter + 1 === data.length) { // 추가 되었을 때 바닥으로 스크롤
             setDataCounter(data.length);
             scroll.current?.scroll({ top:scroll.current?.scrollHeight,left:0, behavior:'smooth' });
@@ -68,7 +66,6 @@ const Content = () => {
         }
         else if(dataCounter + 10 === data.length || dataCounter -1 === data.length ) { // 인피니티 스크롤로 로드 완료 후 스크롤 포지션 유지 || 카드 삭제시
             setDataCounter(data.length);
-            console.log(scroll.current?.scrollHeight,scroll.current?.scrollTop,scrollHeight);
             scroll.current?.scroll({
                 top:scroll.current?.scrollHeight - scrollHeight,
                 left:0
@@ -89,9 +86,7 @@ const Content = () => {
     }, [readyToLoad]);
 
     const handleScroll = throttle(() => {
-        console.log(scroll.current?.scrollTop);
         if (scroll.current?.scrollTop !== undefined  &&  scroll.current?.scrollTop < 100) { // 첫 렌더 이후 스크롤 감지
-            console.log('need to load data');
             setScrollHeight(scroll.current.scrollHeight);
             dispatch(prepareLoadData(true));
         }
@@ -107,7 +102,6 @@ const Content = () => {
       };
     }, []);
 
-    console.log('content render');
     return (
         <Wrapper ref={scroll}>
             <Container>
