@@ -11,7 +11,7 @@ export const store = configureStore({
     user: userSlice
   },
   middleware: getDefaultMiddleware(),
-  devTools: true,
+  devTools: false,
 })
 
 export type RootState = ReturnType<typeof store.getState>

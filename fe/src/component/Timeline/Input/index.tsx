@@ -68,6 +68,9 @@ const Input = () => {
         let imgUrls:string[] = [];
         if(uploadImgs !== undefined){
             for(let i=0;i<uploadImgs.length;i++) {
+                if(i === 3){
+                    break;
+                }
                 await fbFileUpload(uploadImgs[i]).then((url:string) => {
                     console.log(url, typeof url)
                     imgUrls = [...imgUrls, url];
