@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fbAuthentication, fbLogIn, fbLogOut } from '../../firebase';
+import { fbAuthentication, fbLogIn, fbLogOut, fbSignOut } from '../../firebase';
 
 export const auth = createAsyncThunk(
   'user/auth',
@@ -22,6 +22,14 @@ export const logOut = createAsyncThunk(
   async(_,{getState, dispatch}) => {
     console.log('logOut...')
     const response = await fbLogOut();
+    return response;
+  },
+)
+export const signOut = createAsyncThunk(
+  'user/signOut',
+  async(_,{getState, dispatch}) => {
+    console.log('signOut...')
+    const response = await fbSignOut();
     return response;
   },
 )
@@ -52,6 +60,10 @@ export const userSlice = createSlice({
     })
     builder.addCase(logOut.fulfilled, (state, action) => {
       state.isLoggedIn = action.payload
+    })
+    builder.addCase(signOut.fulfilled, (state, action) => {
+      state.isLoggedIn = action.payload
+      state.isAuth = action.payload
     })
   },
   

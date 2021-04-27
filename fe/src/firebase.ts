@@ -72,6 +72,10 @@ export async function fbLogOut() {
     console.log('fblogout',result);
     return false;
 }
+export async function fbSignOut() {
+    await firebase.auth().currentUser?.delete();
+    return false;
+}
 
 // firestore
 export async function fbLoadInitialData() {

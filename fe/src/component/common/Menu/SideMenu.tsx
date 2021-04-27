@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { BsFillGridFill } from 'react-icons/bs'
-import { RiLogoutCircleRLine } from 'react-icons/ri';
+import { RiLogoutCircleRLine,RiLogoutBoxRLine,RiArrowLeftRightLine } from 'react-icons/ri';
 
 import { useAppDispatch } from '../../../hooks/redux';
-import { logOut } from '../../../redux/reducers/userSlice';
+import { logOut, signOut } from '../../../redux/reducers/userSlice';
+import { useHistory } from 'react-router-dom';
+import { changeDate } from '../../../redux/reducers/cardListSlice';
 
 type SideBayProps = {
     active: boolean
@@ -78,6 +80,7 @@ const ToggleBtn = styled(BsFillGridFill)<ToggleBtnProps>`
 `;
 
 const SideMenu = () => {
+    const history = useHistory();
     const dispatch = useAppDispatch();
     const [isOpen,setSidebarToggle] = useState<boolean>(false);
 
@@ -90,6 +93,23 @@ const SideMenu = () => {
             dispatch(logOut());
         }
     }, []);
+    const onChangeMode = useCallback(() => {
+        dispatch(changeDate({
+            year: new Date().getFullYear(),
+            month: new Date().getMonth()
+        }));
+        if(history.location.pathname === '/habittracker') {
+            history.push('/timeline');    
+        } else {
+            history.push('/habittracker');
+        }
+    }, []);
+    const onSignoutClick = useCallback(() => {
+        const result = window.confirm('탈퇴 하시겠습니까?');
+        if(result) {
+            dispatch(signOut());
+        }
+    }, []);
 
     return (
         <div>
@@ -97,6 +117,8 @@ const SideMenu = () => {
             <SideBar active={isOpen}>
                 <ul>
                     <li onClick={onLogoutClick}><RiLogoutCircleRLine /><small>Logout</small></li>
+                    <li onClick={onChangeMode}><RiArrowLeftRightLine /><small>Change</small></li>
+                    <li onClick={onSignoutClick}><RiLogoutBoxRLine /><small>Signout</small></li>
                 </ul>
             </SideBar>
         </div>

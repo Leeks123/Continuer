@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Header from '../component/Timeline/Header';
+import Header from '../component/common/Header';
 import Content from '../component/Timeline/Content';
 import Input from '../component/Timeline/Input/index';
 

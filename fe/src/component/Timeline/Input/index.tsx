@@ -10,7 +10,7 @@ import { addCard } from '../../../redux/reducers/cardListSlice';
 
 import { fbFileUpload } from '../../../firebase';
 import { useWindowWidth } from '../../../hooks/layout';
-import FAB from '../FAB';
+import FAB from '../../common/FAB';
 import mediaQuery from '../../../utils/mediaQuery';
 
 

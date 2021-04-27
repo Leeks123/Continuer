@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
 import { loadDataByDate } from '../../redux/reducers/cardListSlice';
-import Menu from './Menu';
+import Menu from './Menu/index';
 
 const Wrapper = styled.header`
     width: 100%;
