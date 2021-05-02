@@ -117,7 +117,8 @@ const DateView = () => {
             <Container>
                 <DateViewContainer>
                     <DateViewBtn 
-                        data-direction={'left'} style={{ borderRadius:'.25rem 0 0 .25rem' }} onClick={onBtnClick}><BsChevronLeft/></DateViewBtn>
+                        data-direction={'left'} style={{ borderRadius:'.25rem 0 0 .25rem' }} onClick={onBtnClick}
+                    ><BsChevronLeft/></DateViewBtn>
                     {renderWeek.map((v) => {
                         const days = ['일','월','화','수','목','금','토'];
                         let date = (new Date(v)).getDate();

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import mediaQuery from '../../utils/mediaQuery';
 import palette from '../../utils/palette';
+import Habit from './Habit';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -22,7 +23,7 @@ const HabitList = () => {
     return (
         <Wrapper>
             <Container>
-                dsfkdsjfk
+                {new Array(5).fill(0).map((v) => <Habit />)}
             </Container>
         </Wrapper>
     );
