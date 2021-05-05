@@ -49,6 +49,7 @@ const CheckList = styled.ul`
         gap: .125rem;
     }
     @media (min-width: ${mediaQuery.laptop}px) {
+        gap: .325rem;
     }
 `;
 
@@ -72,7 +73,7 @@ const Check = styled.li<CheckProps>`
     }
 `;
 
-const Habit = () => {
+const Habit = (data:any) => {
     return (
         <Layout>
             <Label>1일 1커밋</Label>
