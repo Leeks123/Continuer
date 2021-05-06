@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
-import { loadDataByDate } from '../../redux/reducers/cardListSlice';
+import { loadDataByDate } from '../../redux/reducers/cardSlice';
 import Menu from './Menu/index';
 
 const Wrapper = styled.header`

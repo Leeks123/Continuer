@@ -6,7 +6,7 @@ import { RiLogoutCircleRLine,RiLogoutBoxRLine,RiArrowLeftRightLine } from 'react
 import { useAppDispatch } from '../../../hooks/redux';
 import { logOut, signOut } from '../../../redux/reducers/userSlice';
 import { useHistory } from 'react-router-dom';
-import { changeDate } from '../../../redux/reducers/cardListSlice';
+import { changeDate } from '../../../redux/reducers/cardSlice';
 
 type SideBayProps = {
     active: boolean

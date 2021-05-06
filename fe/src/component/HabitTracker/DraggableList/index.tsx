@@ -34,14 +34,11 @@ const DraggableList:React.FC<DraggableListProps> = ({list}) => {
         e.preventDefault();
     };
     const onDragStart = (e:any) => {
-        // 드래그한 요소에 대한 참조 변수
         setDraggingItem(e.target);
-        // 요소를 반투명하게 함
-        e.target.style.opacity = .5;
+        e.target.style.opacity = .5; // 요소를 반투명하게 함
     };
     const onDragEnd = (e:any) => {
-        // 투명도를 리셋
-        e.target.style.opacity = "";
+        e.target.style.opacity = ""; // 투명도를 리셋
         console.log('dragEnd')
     };
     
@@ -59,7 +56,6 @@ const DraggableList:React.FC<DraggableListProps> = ({list}) => {
     const onDragLeave = (e:any) => {};
     const onDrop = (e:any) => {
       e.preventDefault();
-
       // 드래그한 요소를 드롭 대상과 스위칭
       if (e.target.className === "droppable" && draggingItem !== undefined) {
         e.target.style.background = "";

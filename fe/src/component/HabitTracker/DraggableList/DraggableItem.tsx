@@ -4,8 +4,9 @@ import styled from 'styled-components';
 const Wrapper = styled.li`
     width: 100%;
     height: 100%;
+    list-style: none;
+
     .droppable {
-        list-style: none;
         margin: 0;
         padding: 0;
 

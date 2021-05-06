@@ -76,7 +76,7 @@ const Check = styled.li<CheckProps>`
 const Habit = (data:any) => {
     return (
         <Layout>
-            <Label>1일 1커밋</Label>
+            <Label>{data.data.title}</Label>
             <CheckList>
                 {new Array(21).fill(0).map(v => <Check clicked={false}/>)}
             </CheckList>

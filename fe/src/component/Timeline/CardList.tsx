@@ -3,11 +3,10 @@ import React, { useEffect, useState, createRef, RefObject } from 'react';
 import { getDate, getMonth, getYear } from 'date-fns';
 
 import Card from './Card';
-import { CardState } from '../../redux/reducers/cardListSlice';
+import { CardState, changeDate } from '../../redux/reducers/cardSlice';
 import DayNode from './DayNode';
 import { useWindowHeight } from '../../hooks/layout';
 import { useAppDispatch } from '../../hooks/redux';
-import { changeDate } from '../../redux/reducers/cardListSlice';
 
 type CardListProps = {
     data: CardState[]

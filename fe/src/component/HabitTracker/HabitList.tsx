@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useAppSelector } from '../../hooks/redux';
 
 import mediaQuery from '../../utils/mediaQuery';
-import palette from '../../utils/palette';
 
 import DraggableList from './DraggableList/index';
-import Habit from './Habit';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -23,11 +22,11 @@ const Container = styled.div`
 `;
 
 const HabitList = () => {
+    const habitList = useAppSelector(state => state.habit.habitlist);
     return (
         <Wrapper>
             <Container>
-                {/* {new Array(5).fill(0).map((v) => <Habit />)} */}
-                <DraggableList list={[1,2,3,4,5]} />
+                <DraggableList list={habitList} />
             </Container>
         </Wrapper>
     );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { subDays, addDays } from 'date-fns'
@@ -7,6 +7,9 @@ import { useWindowWidth } from '../../hooks/layout';
 
 import mediaQuery from '../../utils/mediaQuery';
 import palette from '../../utils/palette';
+import { useWeekList } from '../../hooks/date';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { updateCurrentRenderDate } from '../../redux/reducers/habitSlice';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -75,42 +78,28 @@ const DateViewDay = styled.li`
 `;
 
 const DateView = () => {
-    const windowWidth = useWindowWidth();
-    const [pointDate,setPointDate] = useState(new Date());
+    const dispatch = useAppDispatch();
+    const pointDate = useAppSelector(state => state.habit.currentPointDate);
+
+    const weekList = useWeekList(new Date(Date.parse(pointDate)));
     const [renderWeek,setRenderWeek] = useState<string[]>([]);
 
-    const getWeekList = (date:Date,n:number):string[] => {
-        let weekdays = [];
+    useEffect(() => {
+        setRenderWeek(weekList);
+    }, [weekList])
 
-        weekdays.unshift(date.toString());
-        for(let i=1;i<n;i++){
-            date = subDays(date,1);
-            weekdays.unshift(date.toString());
-        }
-        return weekdays;
-    }
-    const onBtnClick = (e:React.MouseEvent<HTMLElement>) => {
+    const onBtnClick = useCallback((e:React.MouseEvent<HTMLElement>) => {
         let el:(HTMLButtonElement|null) = (e.target as HTMLElement).closest('button');
         let btnDirect = el?.dataset.direction;
-        console.log(btnDirect,pointDate)
+        
         if(btnDirect === 'right') {
-            setPointDate(addDays(pointDate,7))
+            const nextDate = addDays(new Date(Date.parse(pointDate)),7);
+            dispatch(updateCurrentRenderDate(nextDate.toString()));
         } else {
-            setPointDate(subDays(pointDate,7))
+            const prevDate = subDays(new Date(Date.parse(pointDate)),7);
+            dispatch(updateCurrentRenderDate(prevDate.toString()));
         }
-    }
-
-    useEffect(() => {
-        let date = pointDate;
-        console.log(date);
-        if (windowWidth < mediaQuery.mobile) {
-            setRenderWeek(getWeekList(date,7));
-        } else if (windowWidth < mediaQuery.tablet) {
-            setRenderWeek(getWeekList(date,14));
-        } else {
-            setRenderWeek(getWeekList(date,21));
-        }
-    }, [windowWidth,pointDate]);
+    },[pointDate]);
 
     return (
         <Wrapper>

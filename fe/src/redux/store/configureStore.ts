@@ -1,17 +1,19 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 // import counterReducer from '../reducers/counterSlice';
 import layoutReducer from '../reducers/layoutSlice';
-import cardListSlice from '../reducers/cardListSlice';
+import cardListSlice from '../reducers/cardSlice';
 import userSlice from '../reducers/userSlice';
+import habitListSlice from '../reducers/habitSlice';
 
 export const store = configureStore({
   reducer: {
     layout: layoutReducer,
     content: cardListSlice,
-    user: userSlice
+    user: userSlice,
+    habit: habitListSlice,
   },
   middleware: getDefaultMiddleware(),
-  devTools: false,
+  devTools: true,
 })
 
 export type RootState = ReturnType<typeof store.getState>

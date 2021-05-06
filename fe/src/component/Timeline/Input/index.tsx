@@ -6,7 +6,7 @@ import { PreviewImg, TextInput, Toast, ToastInput } from './styles'
 import { BiUpArrowAlt, BiCamera } from 'react-icons/bi';
 
 import { useAppDispatch } from '../../../hooks/redux';
-import { addCard } from '../../../redux/reducers/cardListSlice';
+import { addCard } from '../../../redux/reducers/cardSlice';
 
 import { fbFileUpload } from '../../../firebase';
 import { useWindowWidth } from '../../../hooks/layout';

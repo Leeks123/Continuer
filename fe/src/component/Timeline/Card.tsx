@@ -9,7 +9,7 @@ import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
 import { useWindowWidth } from '../../hooks/layout';
 import ImageBox from './ImageBox';
-import { deleteCard } from '../../redux/reducers/cardListSlice';
+import { deleteCard } from '../../redux/reducers/cardSlice';
 import { useAppDispatch } from '../../hooks/redux';
 
 type styleProps = {

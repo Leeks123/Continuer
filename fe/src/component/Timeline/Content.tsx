@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { throttle } from 'lodash';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { loadInitialData ,loadPageData, prepareLoadData } from '../../redux/reducers/cardListSlice';
+import { loadInitialData ,loadPageData, prepareLoadData } from '../../redux/reducers/cardSlice';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
