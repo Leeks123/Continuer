@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { subDays, addDays } from 'date-fns'
 
-import { useWindowWidth } from '../../hooks/layout';
-
 import mediaQuery from '../../utils/mediaQuery';
 import palette from '../../utils/palette';
+
 import { useWeekList } from '../../hooks/date';
+
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { updateCurrentRenderDate } from '../../redux/reducers/habitSlice';
 
@@ -79,16 +79,14 @@ const DateViewDay = styled.li`
 
 const DateView = () => {
     const dispatch = useAppDispatch();
-    const pointDate = useAppSelector(state => state.habit.currentPointDate);
-
-    const weekList = useWeekList(new Date(Date.parse(pointDate)));
+    const { pointDate, weekList } = useWeekList();
     const [renderWeek,setRenderWeek] = useState<string[]>([]);
 
     useEffect(() => {
         setRenderWeek(weekList);
-    }, [weekList])
+    }, [weekList,pointDate])
 
-    const onBtnClick = useCallback((e:React.MouseEvent<HTMLElement>) => {
+    const onBtnClick = (e:React.MouseEvent<HTMLElement>) => {
         let el:(HTMLButtonElement|null) = (e.target as HTMLElement).closest('button');
         let btnDirect = el?.dataset.direction;
         
@@ -99,7 +97,7 @@ const DateView = () => {
             const prevDate = subDays(new Date(Date.parse(pointDate)),7);
             dispatch(updateCurrentRenderDate(prevDate.toString()));
         }
-    },[pointDate]);
+    };
 
     return (
         <Wrapper>

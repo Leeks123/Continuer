@@ -74,7 +74,7 @@ const DraggableList:React.FC<DraggableListProps> = ({list}) => {
             onDrop={onDrop}
         >
             {list.map((listItem,idx) => (
-                <DraggableItem idx={idx} >
+                <DraggableItem key={listItem.id} idx={idx} >
                     <Habit data={listItem}/>
                 </DraggableItem>
             ))}

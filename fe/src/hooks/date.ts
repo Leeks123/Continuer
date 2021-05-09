@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { subDays } from 'date-fns'
 import { useWindowWidth } from './layout';
 import mediaQuery from '../utils/mediaQuery';
+import { useAppSelector } from './redux';
 
+// pointDate를 기준으로 이전 n일의 배열을 반환
 const getWeekList = (date:Date,n:number):string[] => {
     let weekdays = [];
 
@@ -14,21 +16,22 @@ const getWeekList = (date:Date,n:number):string[] => {
     return weekdays;
 }
 
-function useWeekList(pointDate: Date) {
+function useWeekList() {
+    const pointDate:string = useAppSelector(state => state.habit.currentPointDate);
     const windowWidth = useWindowWidth();
-    const [weeklist,setWeekList] = useState<string[]>([]);
+    const [weekList,setWeekList] = useState<string[]>([]);
     
     useEffect(() => {
         if (windowWidth < mediaQuery.mobile) {
-            setWeekList(getWeekList(pointDate,7));
+            setWeekList(getWeekList(new Date(Date.parse(pointDate)),7));
         } else if (windowWidth < mediaQuery.tablet) {
-            setWeekList(getWeekList(pointDate,14));
+            setWeekList(getWeekList(new Date(Date.parse(pointDate)),14));
         } else {
-            setWeekList(getWeekList(pointDate,21));
+            setWeekList(getWeekList(new Date(Date.parse(pointDate)),21));
         }
-    },[windowWidth]);
+    },[windowWidth,pointDate]);
     
-    return weeklist;
+    return { pointDate,weekList };
 }
 
 export { useWeekList }

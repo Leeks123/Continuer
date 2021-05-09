@@ -1,5 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { format } from 'date-fns';
+
+import { useWeekList } from '../../hooks/date';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { updateChecklist } from '../../redux/reducers/habitSlice';
+
 import mediaQuery from '../../utils/mediaQuery';
 import palette from '../../utils/palette';
 
@@ -17,15 +23,9 @@ const Label = styled.div`
     border: 1px solid rgba(0,0,0,.3);
     border-radius: .25rem;
 
-    @media (min-width: ${mediaQuery.mobile}px) {
-        // width: 25%;
-    }
-    @media (min-width: ${mediaQuery.tablet}px) {
-        // width: 23.5%;
-    }
-    @media (min-width: ${mediaQuery.laptop}px) {
-        
-    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `;
 const CheckList = styled.ul`
     width: calc(80% - 19px);
@@ -54,7 +54,7 @@ const CheckList = styled.ul`
 `;
 
 type CheckProps = {
-    clicked: boolean
+    checked: boolean
 }
 const Check = styled.li<CheckProps>`
     flex: .9;
@@ -62,8 +62,8 @@ const Check = styled.li<CheckProps>`
 
     list-style: none;
     background: ${palette[2]};
-    ${(props) => props.clicked && `
-        background: ${palette[6]};
+    ${(props) => props.checked && `
+        background: ${palette[5]};
     `}
     border-radius: .25rem;
 
@@ -74,11 +74,31 @@ const Check = styled.li<CheckProps>`
 `;
 
 const Habit = (data:any) => {
+    const dispatch = useAppDispatch();
+    const { id, title, checklist } = data.data;
+    const { weekList } = useWeekList(); 
+    const [renderWeek,setRenderWeek] = useState<string[]>([]);
+
+    useEffect(() => {
+        setRenderWeek(weekList);
+    }, [weekList])
+
+
+    const onCheck = (code:string, id:number) => {
+        dispatch(updateChecklist({ id, code }));
+    }
+
     return (
         <Layout>
-            <Label>{data.data.title}</Label>
+            <Label>{title}</Label>
             <CheckList>
-                {new Array(21).fill(0).map(v => <Check clicked={false}/>)}
+                {renderWeek.map(v => {
+                    let code = format(new Date(v),'yyyyMMdd');
+                    return <Check 
+                                checked={checklist.includes(code) ? true : false} 
+                                onClick={()=>onCheck(code, id)}>
+                            </Check>
+                })}
             </CheckList>
         </Layout>
     );
