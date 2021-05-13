@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { BiGridVertical } from 'react-icons/bi';
 import { format } from 'date-fns';
 
 import { useWeekList } from '../../hooks/date';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useAppDispatch } from '../../hooks/redux';
 import { updateChecklist } from '../../redux/reducers/habitSlice';
 
 import mediaQuery from '../../utils/mediaQuery';
@@ -19,13 +20,18 @@ const Label = styled.div`
     width: calc(20% + 19px);
     height: 100%;
     padding: .75rem;
+    padding-left: .25rem;
+
+    display: flex;
 
     border: 1px solid rgba(0,0,0,.3);
     border-radius: .25rem;
 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 `;
 const CheckList = styled.ul`
     width: calc(80% - 19px);
@@ -90,7 +96,7 @@ const Habit = (data:any) => {
 
     return (
         <Layout>
-            <Label>{title}</Label>
+            <Label><BiGridVertical size={22} style={{ color: palette[5] }}/><span>{title}</span></Label>
             <CheckList>
                 {renderWeek.map(v => {
                     let code = format(new Date(v),'yyyyMMdd');

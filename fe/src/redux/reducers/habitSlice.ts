@@ -3,6 +3,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 interface Habit {
   id: number,
   title: string,
+  desc: string,
   checklist : string[],
 }
 interface HabitListState {
@@ -20,15 +21,15 @@ export const fn = createAsyncThunk(
 const initialState: HabitListState = {
   currentPointDate: (new Date()).toString(),
   habitlist: [
-    { id:1, title: '1일 1커밋', checklist:[
+    { id:1, title: '1일 1커밋', desc:'', checklist:[
       '20210504','20210506','20210507','20210508',
     ] },
-    { id:2, title: '개인 프로젝트 개발', checklist:[
+    { id:2, title: '개인 프로젝트 개발', desc:'', checklist:[
       '20210504','20210505','20210507','20210509',
     ] },
-    { id:3, title: 'ps', checklist:[] },
-    { id:4, title: '영어 공부', checklist:[] },
-    { id:5, title: '기업 조사', checklist:[] }
+    { id:3, title: 'ps', desc:'', checklist:[] },
+    { id:4, title: '영어 공부', desc:'', checklist:[] },
+    { id:5, title: '기업 조사', desc:'', checklist:[] }
   ]
 }
 

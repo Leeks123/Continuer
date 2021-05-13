@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { subDays, addDays } from 'date-fns'
@@ -7,8 +7,7 @@ import mediaQuery from '../../utils/mediaQuery';
 import palette from '../../utils/palette';
 
 import { useWeekList } from '../../hooks/date';
-
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useAppDispatch } from '../../hooks/redux';
 import { updateCurrentRenderDate } from '../../redux/reducers/habitSlice';
 
 const Wrapper = styled.div`
