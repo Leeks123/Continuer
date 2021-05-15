@@ -3,12 +3,16 @@ import styled from 'styled-components';
 import { BiGridVertical } from 'react-icons/bi';
 import { format } from 'date-fns';
 
+import Modal from 'react-modal';
+import HabitSpecific from './HabitSpecific';
+
 import { useWeekList } from '../../hooks/date';
 import { useAppDispatch } from '../../hooks/redux';
-import { updateChecklist } from '../../redux/reducers/habitSlice';
+import { HabitType, updateChecklist } from '../../redux/reducers/habitSlice';
 
 import mediaQuery from '../../utils/mediaQuery';
 import palette from '../../utils/palette';
+
 
 const Layout = styled.div`
     display: flex;
@@ -31,6 +35,14 @@ const Label = styled.div`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        font-size: .75rem;
+        line-height: 22px;
+    }
+
+    @media (min-width: ${mediaQuery.tablet}px) {
+        span {
+            font-size: 1rem;
+        }
     }
 `;
 const CheckList = styled.ul`
@@ -78,35 +90,67 @@ const Check = styled.li<CheckProps>`
         margin: 0;
     }
 `;
+const modalStyles = { 
+    overlay: {
+        zIndex: 50,
+        background: 'rgba(0,0,0,.2)',
+    },
+    content: {
+        background: 'black',
+        width: '90%',
+        maxWidth: 500,
+        height: '60vh',
+        top: '50%', left: '50%', right: '50%', bottom: '50%',
+        padding: 0,
+        transform: 'translate(-50%, -50%)',
+    }
+}
 
-const Habit = (data:any) => {
+Modal.setAppElement('#root');
+
+const Habit = (data:{data:HabitType}) => {
     const dispatch = useAppDispatch();
-    const { id, title, checklist } = data.data;
+    const { id, title, desc, checklist } = data.data;
     const { weekList } = useWeekList(); 
     const [renderWeek,setRenderWeek] = useState<string[]>([]);
+    const [modalActive,setModalActive] = useState<boolean>(false);
 
     useEffect(() => {
         setRenderWeek(weekList);
     }, [weekList])
 
-
+    const onToggleModal = () => {
+        setModalActive(!modalActive);
+    }
     const onCheck = (code:string, id:number) => {
         dispatch(updateChecklist({ id, code }));
     }
 
     return (
-        <Layout>
-            <Label><BiGridVertical size={22} style={{ color: palette[5] }}/><span>{title}</span></Label>
-            <CheckList>
-                {renderWeek.map(v => {
-                    let code = format(new Date(v),'yyyyMMdd');
-                    return <Check 
-                                checked={checklist.includes(code) ? true : false} 
-                                onClick={()=>onCheck(code, id)}>
-                            </Check>
-                })}
-            </CheckList>
-        </Layout>
+        <>
+            <Layout>
+                <Label onClick={onToggleModal}>
+                    <BiGridVertical size={22} style={{ color: palette[5] }}/>
+                    <span>{title}</span>
+                </Label>
+                <CheckList>
+                    {renderWeek.map(v => {
+                        let code = format(new Date(v),'yyyyMMdd');
+                        return <Check 
+                                    key={code}
+                                    checked={checklist.includes(code) ? true : false} 
+                                    onClick={()=>onCheck(code, id)}>
+                                </Check>
+                    })}
+                </CheckList>
+            </Layout>
+            <Modal
+                isOpen={modalActive}
+                style={modalStyles}
+            >
+                <HabitSpecific toggle={onToggleModal} title={title} desc={desc} checklist={checklist} />
+            </Modal>
+        </>
     );
 };
 

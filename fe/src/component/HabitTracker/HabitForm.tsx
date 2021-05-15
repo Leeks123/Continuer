@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { BsChevronCompactDown } from 'react-icons/bs';
 import palette from '../../utils/palette';
+import { addNewHabit } from '../../redux/reducers/habitSlice';
+import { useAppDispatch } from '../../hooks/redux';
 
 const Wrapper = styled.div`
 `;
@@ -69,14 +71,14 @@ const SubmitButton = styled.div`
     color: white;
     text-align: center;
     line-height: 2.75rem;
-
-    border: 1px solid blue;
 `;
 type HabitFormProps = {
     toggle: React.Dispatch<React.SetStateAction<boolean>>,
     active: boolean
 }
 const HabitForm = ({ toggle, active }:HabitFormProps) => {
+    const dispatch = useAppDispatch();
+    
     const titleInput = useRef<HTMLInputElement | null>(null);
 
     const [title,setTitle] = useState<string>('');
@@ -106,7 +108,7 @@ const HabitForm = ({ toggle, active }:HabitFormProps) => {
         setTitle('');
         setDesc('');
 
-        // dispatch(AddNewHabit(habit));
+        dispatch(addNewHabit(habit));
     },[toggle,active,title,desc]);
 
     useEffect(()=> {

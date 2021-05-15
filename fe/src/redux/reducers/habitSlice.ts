@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 
-interface Habit {
+export interface HabitType {
   id: number,
   title: string,
   desc: string,
@@ -8,7 +8,17 @@ interface Habit {
 }
 interface HabitListState {
   currentPointDate: string,
-  habitlist: Habit[],
+  habitlist: HabitType[],
+}
+
+const getNextId = (currentList: HabitType[]) => {
+  let sorted = currentList.sort((a,b) => a.id - b.id);
+  for(let i=1;i<currentList.length;i++){
+    if(sorted[i].id !== sorted[i-1].id+1) {
+      return sorted[i-1].id+1;
+    } 
+  }
+  return currentList.length+1;
 }
 
 export const fn = createAsyncThunk(
@@ -49,6 +59,27 @@ export const habitlistSlice = createSlice({
       } else {
         habit?.checklist.push(code);
       }
+    },
+    addNewHabit: (state,action: PayloadAction<{ title:string, desc:string }>) => {
+      const newHabit:HabitType = {
+        id: getNextId(state.habitlist),
+        title: action.payload.title,
+        desc: action.payload.desc,
+        checklist: [],
+      }
+      console.log(newHabit);
+      state.habitlist.push(newHabit);
+    },
+    updateListOrder: (state,action: PayloadAction<number[]>) => {
+      let switchingTarget1 = state.habitlist.find(o => o.id === action.payload[0]);
+      let switchingTarget2 = state.habitlist.find(o => o.id === action.payload[1]);
+
+      console.log(switchingTarget1?.id,switchingTarget2?.id);
+      // if(switchingTarget1 && switchingTarget2) {
+      //   let temp = switchingTarget1.id;
+      //   switchingTarget1.id = switchingTarget2.id;
+      //   switchingTarget2.id = temp;
+      // }
     }
   },
   extraReducers: builder => {
@@ -59,7 +90,7 @@ export const habitlistSlice = createSlice({
   
 })
 
-export const { updateCurrentRenderDate, updateChecklist } = habitlistSlice.actions
+export const { updateCurrentRenderDate, updateChecklist, addNewHabit, updateListOrder } = habitlistSlice.actions
 
 // export const selectCount = (state: RootState) => state.counter.value
 

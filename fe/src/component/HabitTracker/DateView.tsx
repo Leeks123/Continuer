@@ -110,7 +110,7 @@ const DateView = () => {
                         let date = (new Date(v)).getDate();
                         let day = days[(new Date(v)).getDay()]
                         return (
-                            <DateViewDay >
+                            <DateViewDay key={date}>
                                 <span>{date}</span>
                                 <small>{day}</small>
                             </DateViewDay>

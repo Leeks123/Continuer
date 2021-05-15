@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useAppDispatch } from '../../../hooks/redux';
+import { updateListOrder } from '../../../redux/reducers/habitSlice';
+
 import Habit from '../Habit';
 import DraggableItem from './DraggableItem';
 
@@ -13,6 +16,7 @@ type DraggableListProps = {
     list: any[],
 }
 const DraggableList:React.FC<DraggableListProps> = ({list}) => {
+    const dispatch = useAppDispatch();
     const [draggingItem,setDraggingItem] = useState<HTMLElement>();
 
     const switchItems = (dragging:HTMLElement,target:HTMLElement) => {
@@ -20,12 +24,20 @@ const DraggableList:React.FC<DraggableListProps> = ({list}) => {
         const draggingParentNode = dragging.parentNode;
         const targetParentNode = target.parentNode;
 
-        if (dragging.getAttribute('data-idx') !== target.getAttribute('data-idx')) {
+        const draggingItemIdx = dragging.getAttribute('data-idx');
+        const targetItemIdx = target.getAttribute('data-idx');
+
+        if (draggingItemIdx && targetItemIdx && draggingItemIdx !== targetItemIdx) {
+            // switch DOM Node
             targetParentNode?.removeChild(target);
             draggingParentNode?.removeChild(dragging);
         
             targetParentNode?.appendChild(dragging);
             draggingParentNode?.appendChild(target);
+
+            // // update id
+            // console.log(draggingItemIdx,targetItemIdx);
+            dispatch(updateListOrder([parseInt(draggingItemIdx),parseInt(targetItemIdx)]));
         }
     }
 
@@ -74,7 +86,7 @@ const DraggableList:React.FC<DraggableListProps> = ({list}) => {
             onDrop={onDrop}
         >
             {list.map((listItem,idx) => (
-                <DraggableItem key={listItem.id} idx={idx} >
+                <DraggableItem key={listItem.id} idx={listItem.id} >
                     <Habit data={listItem}/>
                 </DraggableItem>
             ))}
