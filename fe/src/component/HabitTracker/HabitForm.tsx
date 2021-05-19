@@ -109,7 +109,7 @@ const HabitForm = ({ toggle, active }:HabitFormProps) => {
         setDesc('');
 
         dispatch(addNewHabit(habit));
-    },[toggle,active,title,desc]);
+    },[toggle, active, title, desc, dispatch]);
 
     useEffect(()=> {
         if(active && titleInput) {

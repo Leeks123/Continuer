@@ -148,7 +148,7 @@ const Habit = (data:{data:HabitType}) => {
                 isOpen={modalActive}
                 style={modalStyles}
             >
-                <HabitSpecific toggle={onToggleModal} title={title} desc={desc} checklist={checklist} />
+                <HabitSpecific toggle={onToggleModal} id={id} title={title} desc={desc} checklist={checklist} />
             </Modal>
         </>
     );

@@ -70,6 +70,15 @@ export const habitlistSlice = createSlice({
       console.log(newHabit);
       state.habitlist.push(newHabit);
     },
+    updateHabit: (state,action: PayloadAction<{ id:number, title:string, desc:string }>) => {
+      const { id, title, desc } = action.payload;
+      state.habitlist = state.habitlist.map(habit =>
+        habit.id === id ? { ...habit, title: title, desc: desc } : habit
+      )
+    },
+    deleteHabit: (state,action: PayloadAction<number>) => {
+      state.habitlist = state.habitlist.filter((habit) => habit.id !== action.payload );
+    },
     updateListOrder: (state,action: PayloadAction<number[]>) => {
       let switchingTarget1 = state.habitlist.find(o => o.id === action.payload[0]);
       let switchingTarget2 = state.habitlist.find(o => o.id === action.payload[1]);
@@ -90,7 +99,11 @@ export const habitlistSlice = createSlice({
   
 })
 
-export const { updateCurrentRenderDate, updateChecklist, addNewHabit, updateListOrder } = habitlistSlice.actions
+export const { 
+  updateCurrentRenderDate, updateChecklist, 
+  addNewHabit,updateListOrder, 
+  updateHabit, deleteHabit 
+} = habitlistSlice.actions
 
 // export const selectCount = (state: RootState) => state.counter.value
 
