@@ -35,9 +35,6 @@ const DraggableList:React.FC<DraggableListProps> = ({list}) => {
             targetParentNode?.appendChild(dragging);
             draggingParentNode?.appendChild(target);
 
-            // // update id
-            // console.log(draggingItemIdx,targetItemIdx);
-            dispatch(updateListOrder([parseInt(draggingItemIdx),parseInt(targetItemIdx)]));
         }
     }
 
@@ -51,7 +48,10 @@ const DraggableList:React.FC<DraggableListProps> = ({list}) => {
     };
     const onDragEnd = (e:any) => {
         e.target.style.opacity = ""; // 투명도를 리셋
-        console.log('dragEnd')
+        console.log('dragEnd');
+        dispatch(updateListOrder(
+            Array.from(document.querySelectorAll('.droppable')).map((o => Number((o as HTMLElement).dataset.idx)))
+        ));
     };
     
     // droppable item event
@@ -68,6 +68,7 @@ const DraggableList:React.FC<DraggableListProps> = ({list}) => {
     const onDragLeave = (e:any) => {};
     const onDrop = (e:any) => {
       e.preventDefault();
+      console.log('drop');
       // 드래그한 요소를 드롭 대상과 스위칭
       if (e.target.className === "droppable" && draggingItem !== undefined) {
         e.target.style.background = "";
@@ -85,7 +86,7 @@ const DraggableList:React.FC<DraggableListProps> = ({list}) => {
             onDragLeave={onDragLeave}
             onDrop={onDrop}
         >
-            {list.map((listItem,idx) => (
+            {list.map((listItem) => (
                 <DraggableItem key={listItem.id} idx={listItem.id} >
                     <Habit data={listItem}/>
                 </DraggableItem>

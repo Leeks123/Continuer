@@ -28,7 +28,7 @@ const Container = styled.div`
 const HabitTrackerPage = () => {
     return (
         <Wrapper>
-            <Header/>
+            <Header pickerUsable={false} />
             <Container>
                 <DateView />
                 <HabitList />

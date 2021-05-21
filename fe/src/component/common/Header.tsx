@@ -108,9 +108,11 @@ const StyledChevronDown = styled(BiChevronDown)`
     }
 `;
 
-const Header = () => {
+const Header = ({ pickerUsable=true }:{ pickerUsable?:boolean }) => {
     const dispatch = useAppDispatch();
-    const listDate = useAppSelector((state) => state.content.topElDate);
+    const listDate = useAppSelector((state) => state.content.topElDate); // landingPage header info
+    const habitPointDate = useAppSelector((state) => state.habit.currentPointDate); // habitTrackerPage header info
+
     const [date, setDate] = useState({
         year: new Date().getFullYear(),
         month: new Date().getMonth()
@@ -123,6 +125,13 @@ const Header = () => {
     useEffect(() => {
         setDate(listDate);
     }, [listDate]);
+    useEffect(() => {
+        setDate({
+            year: new Date(Date.parse(habitPointDate)).getFullYear(),
+            month: new Date(Date.parse(habitPointDate)).getMonth()
+        })
+    }, [habitPointDate]);
+    
 
     const onDayClick = (day: Date, { selected }: any) => {
         setSelectedDay(selected ? undefined : day)
@@ -145,7 +154,7 @@ const Header = () => {
                     <StyledChevronDown onClick={onBtnClick}/>
                 </PickerContainer>:
                 <Container>
-                    <YearMonth onClick={() => pickerToggle(true)}>
+                    <YearMonth onClick={() => pickerUsable && pickerToggle(true) }>
                         <span>{monthWords[date.month]}  <small>{date.year}</small></span>
                     </YearMonth>
                     <Menu />

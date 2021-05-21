@@ -8,6 +8,7 @@ export interface HabitType {
 }
 interface HabitListState {
   currentPointDate: string,
+  habitListOrder: number[],
   habitlist: HabitType[],
 }
 
@@ -30,6 +31,7 @@ export const fn = createAsyncThunk(
 
 const initialState: HabitListState = {
   currentPointDate: (new Date()).toString(),
+  habitListOrder: [1,2,3,4,5],
   habitlist: [
     { id:1, title: '1일 1커밋', desc:'', checklist:[
       '20210504','20210506','20210507','20210508',
@@ -69,6 +71,7 @@ export const habitlistSlice = createSlice({
       }
       console.log(newHabit);
       state.habitlist.push(newHabit);
+      // listOrder에 대한 추가 dispatch 필요
     },
     updateHabit: (state,action: PayloadAction<{ id:number, title:string, desc:string }>) => {
       const { id, title, desc } = action.payload;
@@ -78,17 +81,10 @@ export const habitlistSlice = createSlice({
     },
     deleteHabit: (state,action: PayloadAction<number>) => {
       state.habitlist = state.habitlist.filter((habit) => habit.id !== action.payload );
+      // listOrder에 대한 추가 dispatch 필요
     },
     updateListOrder: (state,action: PayloadAction<number[]>) => {
-      let switchingTarget1 = state.habitlist.find(o => o.id === action.payload[0]);
-      let switchingTarget2 = state.habitlist.find(o => o.id === action.payload[1]);
-
-      console.log(switchingTarget1?.id,switchingTarget2?.id);
-      // if(switchingTarget1 && switchingTarget2) {
-      //   let temp = switchingTarget1.id;
-      //   switchingTarget1.id = switchingTarget2.id;
-      //   switchingTarget2.id = temp;
-      // }
+      state.habitListOrder = action.payload;
     }
   },
   extraReducers: builder => {
