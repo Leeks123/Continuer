@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import styled from 'styled-components';
-import { useAppSelector } from '../../hooks/redux';
-import { HabitType } from '../../redux/reducers/habitSlice'; 
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { HabitType, loadInitialData } from '../../redux/reducers/habitSlice'; 
 
 import mediaQuery from '../../utils/mediaQuery';
 
@@ -23,7 +23,13 @@ const Container = styled.div`
 `;
 
 const HabitList = () => {
+    const dispatch = useAppDispatch();
+    useLayoutEffect(()=>{
+        dispatch(loadInitialData());
+    },[]);
+    
     const habitList:HabitType[] = useAppSelector(state => state.habit.habitlist);
+    
     return (
         <Wrapper>
             <Container>

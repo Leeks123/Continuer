@@ -170,14 +170,16 @@ type CardProps = {
     text: string,
     date: string,
     rightSide?: boolean,
-    images?: string[] | null
+    images?: string[] | null,
+    scrollFn: () => void,
 }
-const Card = React.forwardRef<HTMLElement, CardProps>(({ id,text, date, rightSide, images }, ref) => {
+const Card = React.forwardRef<HTMLElement, CardProps>(({ id,text, date, rightSide, images, scrollFn }, ref) => {
     const windowWidth = useWindowWidth();
     const dispatch = useAppDispatch();
 
     const onDelete = useCallback(() => {
         console.log('ondelete', id);
+        scrollFn();
         dispatch(deleteCard(id));
         setSwiped(false);
     }, [id]);

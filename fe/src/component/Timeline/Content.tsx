@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { throttle } from 'lodash';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { loadInitialData ,loadPageData, prepareLoadData } from '../../redux/reducers/cardSlice';
+import { loadInitialData ,loadPageData, prepareLoadData, updateLastScrollPos } from '../../redux/reducers/cardSlice';
 
 import palette from '../../utils/palette';
 import mediaQuery from '../../utils/mediaQuery';
@@ -46,6 +46,7 @@ const Content = () => {
     const dispatch = useAppDispatch();
     const data = useAppSelector(state => state.content.cardlist);
     const readyToLoad = useAppSelector(state => state.content.scrollState);
+    const lastScrollPos = useAppSelector(state => state.content.lastScrollPos);
     const scroll = useRef<HTMLDivElement>(null);
 
     const [dataCounter, setDataCounter] = useState<number>(0);
@@ -64,7 +65,7 @@ const Content = () => {
                 setScrollHeight(scroll.current?.scrollHeight);
             }
         }
-        else if(dataCounter + 10 === data.length || dataCounter -1 === data.length ) { // 인피니티 스크롤로 로드 완료 후 스크롤 포지션 유지 || 카드 삭제시
+        else if(dataCounter + 10 === data.length ) { // 인피니티 스크롤로 로드 완료 후 스크롤 포지션 유지
             setDataCounter(data.length);
             scroll.current?.scroll({
                 top:scroll.current?.scrollHeight - scrollHeight,
@@ -74,6 +75,12 @@ const Content = () => {
                 setScrollHeight(scroll.current?.scrollTop);
             }
             dispatch(prepareLoadData(false));
+        } else if( dataCounter -1 === data.length ) { // 카드 삭제 시
+            setDataCounter(data.length);
+            scroll.current?.scroll({
+                top:lastScrollPos,
+                left:0
+            });
         }
 
     },[data,dataCounter]);
@@ -86,11 +93,18 @@ const Content = () => {
     }, [readyToLoad]);
 
     const handleScroll = throttle(() => {
+        console.log(scroll.current?.scrollTop,scroll.current?.scrollHeight, scrollHeight);
         if (scroll.current?.scrollTop !== undefined  &&  scroll.current?.scrollTop < 100) { // 첫 렌더 이후 스크롤 감지
             setScrollHeight(scroll.current.scrollHeight);
             dispatch(prepareLoadData(true));
         }
     },500);
+
+    const scrollPosHandler = () => {
+        if(scroll.current?.scrollTop) {
+            dispatch(updateLastScrollPos(scroll.current.scrollTop))
+        }
+    }
 
     useEffect(() => {
       function watchScroll() {
@@ -105,7 +119,7 @@ const Content = () => {
     return (
         <Wrapper ref={scroll}>
             <Container>
-                <CardList data={data}/>
+                <CardList data={data} scrollFn={scrollPosHandler}/>
             </Container>
         </Wrapper>
     );

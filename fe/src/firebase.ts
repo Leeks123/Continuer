@@ -50,6 +50,7 @@ export async function fbLogIn() {
                 db.collection('users').doc(uid).set({
                     name: displayName,
                     email: email,
+                    habitListOrder: []
                 }).then(() =>{
                     db.collection(`users/${auth.currentUser?.uid}/cards`).add({
                         uid: auth.currentUser.uid,
@@ -57,7 +58,15 @@ export async function fbLogIn() {
                         text: 'first Card, if you want to delete this card, swipe this!',
                         createdAt: 0
                     });
-                })
+                }).then(() =>{
+                    db.collection(`users/${auth.currentUser?.uid}/habits`).add({
+                        uid: auth.currentUser.uid,
+                        id: -1,
+                        text: 'first Habit',
+                        desc: 'sample Habit',
+                        checklist: [-1]
+                    });
+                });
             }
         });
         
@@ -78,6 +87,7 @@ export async function fbSignOut() {
 }
 
 // firestore
+//// timeline page
 export async function fbLoadInitialData() {
     const cardCollection = db.collection('users').doc(auth.currentUser.uid).collection('cards');
     const cards = await cardCollection
@@ -174,3 +184,44 @@ export async function fbAddCard(cardData:{
     };
 }
 
+//// habitTracker page
+export async function fbLoadInitiaHabits() {
+    const habitCollection = db.collection('users').doc(auth.currentUser.uid).collection('habits');
+    const habits = await habitCollection.get();
+    const ret:any[] = [];
+    for(const doc of habits.docs){
+        console.log(doc.id, '=>', doc.data());
+        let { id, title, desc, checklist } = doc.data();
+        const obj = {
+            id, title, desc, checklist
+        };
+        ret.push(obj);
+    }
+    return ret;
+}
+export async function fbLoadListOrder() {
+    const userRef = await db.collection('users').doc(auth.currentUser.uid);
+    let ret = await userRef.get('habitListOrder').then((doc:any) => {
+        if (doc.exists) {
+            return doc.data().habitListOrder;
+        } else {
+            return [];
+        }
+    });
+    return ret;
+}
+export async function fbUpdateListOrder(order:number[]){
+    db.collection('users').doc(auth.currentUser.uid).update({
+        habitListOrder: order
+    });
+}
+export async function fbAddHabit(habitData:{
+    id: number,
+    title:string, 
+    desc:string,
+    checklist: string[]
+  }) {
+    const habitCollection = db.collection('users').doc(auth.currentUser.uid).collection('habits');
+    const newHabit = habitCollection.doc();
+    newHabit.set(habitData);
+}

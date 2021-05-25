@@ -17,7 +17,8 @@ interface CardListState {
     topElDate : DateState,
     scrollState: boolean,
     error: null | string,
-    lastID: number
+    lastID: number,
+    lastScrollPos: number,
 }
 // function getDummyCardList():CardState[] {
 //   const ret = new Array(300).fill(0);
@@ -92,6 +93,7 @@ const initialState: CardListState = {
   },
   scrollState: false,
   lastID: 0,
+  lastScrollPos: 0,
   error: null
 }
 
@@ -107,6 +109,9 @@ export const cardlistSlice = createSlice({
     },
     updateLastID: (state, action: PayloadAction<number>) => {
       state.lastID = action.payload
+    },
+    updateLastScrollPos: (state, action: PayloadAction<number>) => {
+      state.lastScrollPos = action.payload
     }
   },
   extraReducers: builder => {
@@ -135,7 +140,7 @@ export const cardlistSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { changeDate, prepareLoadData, updateLastID } = cardlistSlice.actions
+export const { changeDate, prepareLoadData, updateLastID, updateLastScrollPos } = cardlistSlice.actions
 
 // export const selectCount = (state: RootState) => state.counter.value
 

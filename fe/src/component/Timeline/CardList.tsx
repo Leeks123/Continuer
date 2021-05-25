@@ -9,9 +9,10 @@ import { useWindowHeight } from '../../hooks/layout';
 import { useAppDispatch } from '../../hooks/redux';
 
 type CardListProps = {
-    data: CardState[]
+    data: CardState[],
+    scrollFn: ()=>void
 }
-const CardList = ({ data }:CardListProps) => {
+const CardList = ({ data,scrollFn }:CardListProps) => {
     let sideFlag = false
     const dateChangePoint:CardState[] = data.filter((v,i) => {
         if (data[i-1]){
@@ -79,6 +80,7 @@ const CardList = ({ data }:CardListProps) => {
                                 date={v.createdAt} 
                                 rightSide={sideFlag}
                                 images={v.images} 
+                                scrollFn={scrollFn}
                             />
                         </div>
                     )
@@ -92,6 +94,7 @@ const CardList = ({ data }:CardListProps) => {
                             date={v.createdAt} 
                             rightSide={sideFlag} 
                             images={v.images} 
+                            scrollFn={scrollFn}
                         />
                     );
                 }
