@@ -222,6 +222,46 @@ export async function fbAddHabit(habitData:{
     checklist: string[]
   }) {
     const habitCollection = db.collection('users').doc(auth.currentUser.uid).collection('habits');
-    const newHabit = habitCollection.doc();
+    const newHabit = await habitCollection.doc();
     newHabit.set(habitData);
+}
+export async function fbUpdateHabit(habitData:{
+    id: number,
+    title:string, 
+    desc:string,
+  }) {
+    const habitCollection = db.collection('users').doc(auth.currentUser.uid).collection('habits');
+    const habitDocSnapshot = await habitCollection.where('id','==',habitData.id).get();
+    const docID = await habitDocSnapshot.docs[0].id;
+    habitCollection.doc(docID).update({
+        title: habitData.title, desc: habitData.desc
+    });
+}
+export async function fbUpdateChecklist(habitData:{
+    id: number,
+    code: string
+  }) {
+    const habitCollection = db.collection('users').doc(auth.currentUser.uid).collection('habits');
+    const habitDocSnapshot = await habitCollection.where('id','==',habitData.id).get();
+    const docID = await habitDocSnapshot.docs[0].id;
+    const docChecklist = await habitDocSnapshot.docs[0].data().checklist;
+    
+    let updateList = [];
+    if(docChecklist.includes(habitData.code)) {
+        updateList = docChecklist.filter((v:string) => v !== habitData.code)
+    } else {
+        updateList = [...docChecklist, habitData.code]
+    }
+    habitCollection.doc(docID).update({
+        checklist: updateList
+    });
+}
+export async function fbDeleteHabit(habitId:number) {
+    const data =  db.collection('users').doc(auth.currentUser.uid).collection('cards')
+        .where('id','==',habitId)
+        .get();
+    console.log('fbdelete',data);
+    data.forEach((doc:any) => {
+        doc.ref.delete();
+    });
 }

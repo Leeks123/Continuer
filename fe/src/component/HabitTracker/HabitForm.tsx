@@ -107,7 +107,6 @@ const HabitForm = ({ toggle, active }:HabitFormProps) => {
         }
         setTitle('');
         setDesc('');
-
         dispatch(addNewHabit(habit));
     },[toggle, active, title, desc, dispatch]);
 
